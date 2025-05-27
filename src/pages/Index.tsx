@@ -1,9 +1,9 @@
-
 import { useState, useMemo } from 'react';
 import { Search, BookOpen, Users, Clock, Star } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import Header from '@/components/Header';
 
 // Sample course data
 const courses = [
@@ -159,6 +159,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <Header />
+      
       {/* Header */}
       <div className={`transition-all duration-500 ${showResults ? 'py-6' : 'py-20'}`}>
         <div className="max-w-4xl mx-auto px-4">
