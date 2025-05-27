@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Plus, Map, Clock, Target, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,6 +23,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 
 interface Roadmap {
@@ -48,6 +48,8 @@ interface RoadmapFormData {
 }
 
 const Roadmaps = () => {
+  const navigate = useNavigate();
+  
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([
     {
       id: '1',
@@ -126,6 +128,10 @@ const Roadmaps = () => {
       case 'Advanced': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     }
+  };
+
+  const handleRoadmapClick = (roadmapId: string) => {
+    navigate(`/roadmaps/${roadmapId}`);
   };
 
   return (
@@ -328,6 +334,7 @@ const Roadmaps = () => {
             <Card 
               key={roadmap.id} 
               className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+              onClick={() => handleRoadmapClick(roadmap.id)}
             >
               <CardHeader>
                 <div className="flex items-start justify-between mb-2">
