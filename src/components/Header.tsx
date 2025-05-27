@@ -12,10 +12,36 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
-  const [activeTab, setActiveTab] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const getActiveTab = () => {
+    if (location.pathname === '/roadmaps') return 'roadmaps';
+    if (location.pathname === '/courses') return 'courses';
+    if (location.pathname === '/categories') return 'categories';
+    return 'home';
+  };
+
+  const handleTabChange = (value: string) => {
+    switch (value) {
+      case 'home':
+        navigate('/');
+        break;
+      case 'roadmaps':
+        navigate('/roadmaps');
+        break;
+      case 'courses':
+        // TODO: Add courses page
+        break;
+      case 'categories':
+        // TODO: Add categories page
+        break;
+    }
+  };
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -28,7 +54,7 @@ const Header = () => {
         {/* Left side - Logo and Navigation */}
         <div className="flex items-center space-x-8">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">C</span>
             </div>
@@ -37,7 +63,7 @@ const Header = () => {
 
           {/* Navigation Tabs */}
           <nav className="hidden md:flex">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <Tabs value={getActiveTab()} onValueChange={handleTabChange}>
               <TabsList className="grid grid-cols-4">
                 <TabsTrigger value="home">Home</TabsTrigger>
                 <TabsTrigger value="courses">Courses</TabsTrigger>
