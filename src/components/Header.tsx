@@ -1,7 +1,8 @@
 
 import { useState } from 'react';
-import { User, ChevronDown, Settings, LogOut } from 'lucide-react';
+import { User, Settings, LogOut, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -14,9 +15,15 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Header = () => {
   const [activeTab, setActiveTab] = useState('home');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-gray-900/95 dark:supports-[backdrop-filter]:bg-gray-900/60">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Left side - Logo and Navigation */}
         <div className="flex items-center space-x-8">
@@ -25,7 +32,7 @@ const Header = () => {
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">C</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">CourseSearch</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white">CourseSearch</span>
           </div>
 
           {/* Navigation Tabs */}
@@ -41,8 +48,19 @@ const Header = () => {
           </nav>
         </div>
 
-        {/* Right side - Profile */}
+        {/* Right side - Dark Mode Toggle and Profile */}
         <div className="flex items-center space-x-4">
+          {/* Dark Mode Toggle */}
+          <div className="flex items-center space-x-2">
+            <Sun className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+            <Switch 
+              checked={isDarkMode} 
+              onCheckedChange={toggleDarkMode}
+              aria-label="Toggle dark mode"
+            />
+            <Moon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+          </div>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
