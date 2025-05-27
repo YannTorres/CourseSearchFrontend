@@ -42,7 +42,7 @@ const Header = () => {
                 <TabsTrigger value="home">Home</TabsTrigger>
                 <TabsTrigger value="courses">Courses</TabsTrigger>
                 <TabsTrigger value="categories">Categories</TabsTrigger>
-                <TabsTrigger value="instructors">Instructors</TabsTrigger>
+                <TabsTrigger value="roadmaps">Roadmaps</TabsTrigger>
               </TabsList>
             </Tabs>
           </nav>
