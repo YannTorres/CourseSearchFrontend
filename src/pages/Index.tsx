@@ -30,29 +30,29 @@ const Index = () => {
             <h1 className="text-6xl font-bold text-gray-900 dark:text-white mb-4">
               Course<span className="text-blue-600">Search</span>
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">Discover your next learning adventure</p>
+            <p className="text-xl text-gray-600 dark:text-gray-300">Descubra sua próxima jornada de aprendizado</p>
           </div>
           
-          {/* Search Bar */}
+          {/* Barra de busca */}
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-            <div className={`relative rounded-full border-2 transition-all duration-300 ${
+            <div className={`relative rounded-lg transition-all duration-300 ${
               isSearchFocused ? 'border-blue-500 shadow-lg' : 'border-gray-200 dark:border-gray-600 shadow-md'
             } bg-white dark:bg-gray-800`}>
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
               <Input
                 type="text"
-                placeholder="Search for courses, topics, or instructors..."
+                placeholder="Busque por cursos, tópicos ou instrutores..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
-                className="pl-12 pr-16 py-4 text-lg border-0 rounded-full focus:ring-0 focus:outline-none bg-transparent dark:text-white dark:placeholder-gray-400"
+                className="pl-12 pr-16 py-6 text-lg border-0 rounded-lg focus:ring-0 focus:outline-none bg-transparent dark:text-white dark:placeholder-gray-400"
               />
               <Button 
                 type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full h-10 px-6"
+                className="absolute right-0 top-1/2 -translate-y-1/2 rounded-lg h-12 px-6 flex items-center justify-center bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 text-white"
               >
-                Search
+                Buscar
               </Button>
             </div>
           </form>
@@ -60,9 +60,9 @@ const Index = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 pb-16">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Popular Categories</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Categorias Populares</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {['Web Development', 'Data Science', 'Design', 'Marketing'].map((category) => (
+          {['Desenvolvimento Web', 'Ciência de Dados', 'Design', 'Marketing'].map((category) => (
             <Card 
               key={category} 
               className="hover:shadow-md transition-all duration-300 cursor-pointer hover:scale-105 dark:bg-gray-800 dark:border-gray-700"

@@ -129,6 +129,42 @@ const courses = [
     rating: 4.6,
     instructor: "Maria Garcia",
     tags: ["Blockchain", "Cryptocurrency", "Smart Contracts", "Web3"]
+  },
+  {
+    id: 11,
+    title: "DevOps Essentials",
+    description: "Aprenda os fundamentos de DevOps, CI/CD, automação e monitoramento.",
+    category: "DevOps",
+    level: "Beginner",
+    duration: "8 weeks",
+    students: 4320,
+    rating: 4.7,
+    instructor: "Carlos Silva",
+    tags: ["DevOps", "CI/CD", "Automação", "Monitoramento"]
+  },
+  {
+    id: 12,
+    title: "Introdução ao TypeScript",
+    description: "Descubra os benefícios do TypeScript para aplicações JavaScript modernas.",
+    category: "Programming",
+    level: "Beginner",
+    duration: "6 weeks",
+    students: 3780,
+    rating: 4.6,
+    instructor: "Ana Souza",
+    tags: ["TypeScript", "JavaScript", "Frontend"]
+  },
+  {
+    id: 13,
+    title: "Gestão de Projetos Ágeis",
+    description: "Domine Scrum, Kanban e metodologias ágeis para gestão de projetos.",
+    category: "Management",
+    level: "Intermediate",
+    duration: "10 weeks",
+    students: 2890,
+    rating: 4.8,
+    instructor: "Bruno Lima",
+    tags: ["Scrum", "Kanban", "Ágil", "Gestão"]
   }
 ];
 
@@ -138,6 +174,9 @@ const Courses = () => {
   const [levelFilter, setLevelFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('relevance');
+  const [currentPage, setCurrentPage] = useState(1);
+  const resultsPerPage = 9;
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
     const query = searchParams.get('q');
@@ -190,6 +229,20 @@ const Courses = () => {
     return filtered;
   }, [searchQuery, levelFilter, categoryFilter, sortBy]);
 
+  // Paginação
+  const totalPages = Math.ceil(filteredCourses.length / resultsPerPage);
+  const paginatedCourses = filteredCourses.slice(
+    (currentPage - 1) * resultsPerPage,
+    currentPage * resultsPerPage
+  );
+
+  useEffect(() => {
+    // Se a página atual for maior que o total de páginas após um filtro, volta para a primeira página
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [filteredCourses, totalPages, currentPage]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchParams({ q: searchQuery });
@@ -213,24 +266,27 @@ const Courses = () => {
       {/* Search and Filters */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Course Search</h1>
           
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="mb-6">
-            <div className="relative max-w-2xl">
+            <div className={`relative max-w-2xl rounded-lg transition-all duration-300 ${
+              isSearchFocused ? 'border-blue-500 shadow-lg' : 'border-gray-200 dark:border-gray-600 shadow-md'
+            } bg-white dark:bg-gray-800`}>
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
               <Input
                 type="text"
-                placeholder="Search for courses, topics, or instructors..."
+                placeholder="Busque por cursos, tópicos ou instrutores..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-16 py-3 text-lg rounded-lg border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500"
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                className="pl-12 pr-16 py-5 text-lg border-0 rounded-lg focus:ring-0 focus:outline-none bg-transparent dark:text-white dark:placeholder-gray-400"
               />
               <Button 
                 type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-md h-8 px-4"
+                className="absolute right-0 top-1/2 -translate-y-1/2 rounded-lg h-10 px-6 flex items-center justify-center bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 text-white"
               >
-                Search
+                Buscar
               </Button>
             </div>
           </form>
@@ -239,27 +295,27 @@ const Courses = () => {
           <div className="flex flex-wrap gap-4 items-center">
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filters:</span>
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filtros:</span>
             </div>
             
             <Select value={levelFilter} onValueChange={setLevelFilter}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Level" />
+                <SelectValue placeholder="Nível" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Levels</SelectItem>
-                <SelectItem value="Beginner">Beginner</SelectItem>
-                <SelectItem value="Intermediate">Intermediate</SelectItem>
-                <SelectItem value="Advanced">Advanced</SelectItem>
+                <SelectItem value="all">Todos os níveis</SelectItem>
+                <SelectItem value="Beginner">Iniciante</SelectItem>
+                <SelectItem value="Intermediate">Intermediário</SelectItem>
+                <SelectItem value="Advanced">Avançado</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-48">
-                <SelectValue placeholder="Category" />
+                <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="all">Todas as categorias</SelectItem>
                 {categories.map(category => (
                   <SelectItem key={category} value={category}>{category}</SelectItem>
                 ))}
@@ -268,13 +324,13 @@ const Courses = () => {
 
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Sort by" />
+                <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="relevance">Relevance</SelectItem>
-                <SelectItem value="rating">Rating</SelectItem>
-                <SelectItem value="students">Students</SelectItem>
-                <SelectItem value="title">Title</SelectItem>
+                <SelectItem value="relevance">Relevância</SelectItem>
+                <SelectItem value="rating">Avaliação</SelectItem>
+                <SelectItem value="students">Alunos</SelectItem>
+                <SelectItem value="title">Título</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -283,8 +339,8 @@ const Courses = () => {
         {/* Results Summary */}
         <div className="mb-6">
           <p className="text-gray-600 dark:text-gray-400">
-            Found <span className="font-semibold">{filteredCourses.length}</span> course{filteredCourses.length !== 1 ? 's' : ''}
-            {searchQuery && <span> for "{searchQuery}"</span>}
+            Encontrado<span className="font-semibold"> {filteredCourses.length} </span>curso{filteredCourses.length !== 1 ? 's' : ''}
+            {searchQuery && <span> para "{searchQuery}"</span>}
           </p>
         </div>
 
@@ -292,66 +348,96 @@ const Courses = () => {
         {filteredCourses.length === 0 ? (
           <div className="text-center py-16">
             <BookOpen className="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No courses found</h3>
-            <p className="text-gray-600 dark:text-gray-400">Try adjusting your search or filters.</p>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Nenhum curso encontrado</h3>
+            <p className="text-gray-600 dark:text-gray-400">Tente ajustar sua busca ou filtros.</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredCourses.map((course) => (
-              <Card key={course.id} className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer dark:bg-gray-800 dark:border-gray-700">
-                <CardContent className="p-6">
-                  <div className="mb-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <Badge variant="secondary" className="text-xs dark:bg-gray-700 dark:text-gray-200">
-                        {course.category}
-                      </Badge>
-                      <Badge className={`text-xs ${getLevelColor(course.level)}`}>
-                        {course.level}
-                      </Badge>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                      {course.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
-                      {course.description}
-                    </p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                      <Users className="h-4 w-4 mr-2" />
-                      <span>{course.students.toLocaleString()} students</span>
-                      <Clock className="h-4 w-4 ml-4 mr-2" />
-                      <span>{course.duration}</span>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                        <span className="text-sm font-medium dark:text-white">{course.rating}</span>
+          <>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {paginatedCourses.map((course) => (
+                <Card key={course.id} className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer dark:bg-gray-800 dark:border-gray-700">
+                  <CardContent className="p-6">
+                    <div className="mb-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <Badge variant="secondary" className="text-xs dark:bg-gray-700 dark:text-gray-200">
+                          {course.category}
+                        </Badge>
+                        <Badge className={`text-xs ${getLevelColor(course.level)}`}>
+                          {course.level}
+                        </Badge>
                       </div>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">by {course.instructor}</span>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        {course.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
+                        {course.description}
+                      </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-1">
-                      {course.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
-                          {tag}
-                        </Badge>
-                      ))
-                      }
-                      {course.tags.length > 3 && (
-                        <Badge variant="outline" className="text-xs text-gray-500 dark:text-gray-400 dark:border-gray-600">
-                          +{course.tags.length - 3}
-                        </Badge>
-                      )}
+                    <div className="space-y-3">
+                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <Users className="h-4 w-4 mr-2" />
+                        <span>{course.students.toLocaleString()} alunos</span>
+                        <Clock className="h-4 w-4 ml-4 mr-2" />
+                        <span>{course.duration}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                          <span className="text-sm font-medium dark:text-white">{course.rating}</span>
+                        </div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">por {course.instructor}</span>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1">
+                        {course.tags.slice(0, 3).map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
+                            {tag}
+                          </Badge>
+                        ))
+                        }
+                        {course.tags.length > 3 && (
+                          <Badge variant="outline" className="text-xs text-gray-500 dark:text-gray-400 dark:border-gray-600">
+                            +{course.tags.length - 3}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-            }
-          </div>
+                  </CardContent>
+                </Card>
+              ))
+              }
+            </div>
+            {/* Paginação */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-8 gap-2">
+                <button
+                  className="px-3 py-1 rounded-md border text-sm font-medium disabled:opacity-50"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Anterior
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`px-3 py-1 rounded-md border text-sm font-medium ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200'}`}
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+                <button
+                  className="px-3 py-1 rounded-md border text-sm font-medium disabled:opacity-50"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Próxima
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
