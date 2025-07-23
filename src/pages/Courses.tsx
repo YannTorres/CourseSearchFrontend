@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, BookOpen, Users, Clock, Star, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -170,6 +170,7 @@ const courses = [
 
 const Courses = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [levelFilter, setLevelFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -355,7 +356,11 @@ const Courses = () => {
           <>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {paginatedCourses.map((course) => (
-                <Card key={course.id} className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer dark:bg-gray-800 dark:border-gray-700">
+                <Card 
+                  key={course.id} 
+                  className="hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer dark:bg-gray-800 dark:border-gray-700"
+                  onClick={() => navigate(`/courses/${course.id}`)}
+                >
                   <CardContent className="p-6">
                     <div className="mb-4">
                       <div className="flex items-start justify-between mb-2">
