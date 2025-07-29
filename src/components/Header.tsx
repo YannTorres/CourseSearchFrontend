@@ -22,6 +22,7 @@ const Header = () => {
   const getActiveTab = () => {
     if (location.pathname === '/roadmaps') return 'roadmaps';
     if (location.pathname === '/categories') return 'categories';
+    if (location.pathname === '/login') return 'login';
     return 'home';
   };
 
@@ -35,6 +36,9 @@ const Header = () => {
         break;
       case 'categories':
         // TODO: Add categories page
+        break;
+      case 'login':
+        navigate('/login');
         break;
     }
   };
@@ -60,10 +64,11 @@ const Header = () => {
           {/* Navigation Tabs */}
           <nav className="hidden md:flex">
             <Tabs value={getActiveTab()} onValueChange={handleTabChange}>
-              <TabsList className="grid grid-cols-3">
+              <TabsList className="grid grid-cols-4">
                 <TabsTrigger value="home">Home</TabsTrigger>
                 <TabsTrigger value="categories">Categories</TabsTrigger>
                 <TabsTrigger value="roadmaps">Roadmaps</TabsTrigger>
+                <TabsTrigger value="login">Login</TabsTrigger>
               </TabsList>
             </Tabs>
           </nav>
