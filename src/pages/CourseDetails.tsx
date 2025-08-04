@@ -263,7 +263,7 @@ const CourseDetails = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Enrollment Card */}
-            <Card className="dark:bg-gray-800 dark:border-gray-700 sticky top-4">
+            <Card className="dark:bg-gray-800 dark:border-gray-700 top-4">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
                   <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
