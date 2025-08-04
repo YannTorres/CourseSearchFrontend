@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Eye, EyeOff } from 'lucide-react';
 
 const Register = () => {
@@ -17,7 +16,6 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    agreeToTerms: false
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,31 +42,31 @@ const Register = () => {
             </div>
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
-            Create your account
+            Crie sua conta
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Or{' '}
+            Ou{' '}
             <Link
               to="/login"
               className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
             >
-              sign in to your existing account
+              Entre na sua conta
             </Link>
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Join CourseSearch</CardTitle>
+            <CardTitle>Entre na Course Search</CardTitle>
             <CardDescription>
-              Create an account to start your learning journey
+            Crie uma conta para iniciar sua jornada de aprendizado
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First name</Label>
+                  <Label htmlFor="firstName">Primeiro Nome</Label>
                   <Input
                     id="firstName"
                     name="firstName"
@@ -76,11 +74,11 @@ const Register = () => {
                     required
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    placeholder="First name"
+                    placeholder="Fulano"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last name</Label>
+                  <Label htmlFor="lastName">Ultimo Nome</Label>
                   <Input
                     id="lastName"
                     name="lastName"
@@ -88,13 +86,13 @@ const Register = () => {
                     required
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    placeholder="Last name"
+                    placeholder="De Tal"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -103,12 +101,12 @@ const Register = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="Enter your email"
+                  placeholder="Email@email.com"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Senha</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -118,7 +116,7 @@ const Register = () => {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    placeholder="Create a password"
+                    placeholder="Mínimo de 8 caracteres"
                   />
                   <Button
                     type="button"
@@ -137,7 +135,7 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm password</Label>
+                <Label htmlFor="confirmPassword">Confirme sua senha</Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
@@ -147,7 +145,7 @@ const Register = () => {
                     required
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    placeholder="Confirm your password"
+                    placeholder="Mínimo de 8 caracteres"
                   />
                   <Button
                     type="button"
@@ -164,33 +162,11 @@ const Register = () => {
                   </Button>
                 </div>
               </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="agreeToTerms"
-                  name="agreeToTerms"
-                  checked={formData.agreeToTerms}
-                  onCheckedChange={(checked) => 
-                    setFormData({ ...formData, agreeToTerms: checked as boolean })
-                  }
-                />
-                <Label htmlFor="agreeToTerms" className="text-sm">
-                  I agree to the{' '}
-                  <Link to="/terms" className="text-blue-600 hover:text-blue-500 dark:text-blue-400">
-                    Terms of Service
-                  </Link>{' '}
-                  and{' '}
-                  <Link to="/privacy" className="text-blue-600 hover:text-blue-500 dark:text-blue-400">
-                    Privacy Policy
-                  </Link>
-                </Label>
-              </div>
             </CardContent>
             <CardFooter>
               <Button 
                 type="submit" 
                 className="w-full"
-                disabled={!formData.agreeToTerms}
               >
                 Create account
               </Button>

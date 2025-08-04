@@ -36,12 +36,6 @@ const Header = () => {
       case 'roadmaps':
         navigate('/roadmaps');
         break;
-      case 'categories':
-        // TODO: Add categories page
-        break;
-      case 'login':
-        navigate('/login');
-        break;
     }
   };
 
@@ -66,11 +60,9 @@ const Header = () => {
           {/* Navigation Tabs */}
           <nav className="hidden md:flex">
             <Tabs value={getActiveTab()} onValueChange={handleTabChange}>
-              <TabsList className={isAuthenticated ? "grid grid-cols-3" : "grid grid-cols-4"}>
-                <TabsTrigger value="home">Home</TabsTrigger>
-                <TabsTrigger value="categories">Categories</TabsTrigger>
+              <TabsList className={isAuthenticated ? "grid grid-cols-2" : "grid grid-cols-2"}>
+                <TabsTrigger value="home">Cursos</TabsTrigger>
                 <TabsTrigger value="roadmaps">Roadmaps</TabsTrigger>
-                {!isAuthenticated && <TabsTrigger value="login">Login</TabsTrigger>}
               </TabsList>
             </Tabs>
           </nav>
@@ -94,7 +86,7 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={user?.avatar || "/placeholder.svg"} alt="Profile" />
+                    <AvatarImage src={user?.avatar || "https://ibb.co/DfDZQGJ6"} alt="Profile" />
                     <AvatarFallback>
                       <User className="h-5 w-5" />
                     </AvatarFallback>
@@ -103,7 +95,7 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <div className="flex flex-col space-y-1 p-2">
-                  <p className="text-sm font-medium leading-none">{user?.name}</p>
+                  <p className="text-sm font-medium leading-none">{user?.firstName}</p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.email}
                   </p>
@@ -126,7 +118,7 @@ const Header = () => {
             </DropdownMenu>
           ) : (
             <Button onClick={() => navigate('/login')} variant="default">
-              Login
+              Fazer Login
             </Button>
           )}
         </div>

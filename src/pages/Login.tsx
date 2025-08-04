@@ -25,7 +25,7 @@ const Login = () => {
 
     try {
       // Replace this with your actual API endpoint
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('https://localhost:7236/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,15 +43,15 @@ const Login = () => {
       login(data.token, data.user);
       
       toast({
-        title: "Login successful",
-        description: "Welcome back!",
+        title: "Login bem-sucedido",
+        description: "Bem vindo de Volta!",
       });
       
       navigate('/');
     } catch (error) {
       toast({
-        title: "Login failed",
-        description: "Please check your credentials and try again.",
+        title: "Falha no login",
+        description: "Verifique suas credenciais e tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -76,30 +76,30 @@ const Login = () => {
             </div>
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
-            Sign in to your account
+            Entre na sua conta
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Or{' '}
+            Ou{' '}
             <Link
               to="/register"
               className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
             >
-              create a new account
+              Crie uma nova conta
             </Link>
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Welcome back</CardTitle>
+            <CardTitle>Bem vindo!</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              Insira suas credenciais para acessar sua conta
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -108,12 +108,12 @@ const Login = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="Enter your email"
+                  placeholder="Email@email.com"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Senha</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -123,7 +123,7 @@ const Login = () => {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    placeholder="Enter your password"
+                    placeholder="Digite sua senha"
                   />
                   <Button
                     type="button"
@@ -141,7 +141,7 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
+              {/*<div className="flex items-center justify-between">
                 <div className="text-sm">
                   <Link
                     to="/forgot-password"
@@ -150,11 +150,11 @@ const Login = () => {
                     Forgot your password?
                   </Link>
                 </div>
-              </div>
+              </div>*/}
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? 'Entrando...' : 'Sign in'}
               </Button>
             </CardFooter>
           </form>
