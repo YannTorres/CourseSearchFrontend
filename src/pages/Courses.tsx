@@ -164,11 +164,6 @@ const Courses = () => {
               <>
                 Encontrado<span className="font-semibold"> {courseData?.totalCount || 0} </span>curso{(courseData?.totalCount || 0) !== 1 ? 's' : ''}
                 {searchQuery && <span> para "{searchQuery}"</span>}
-                {courseData && (
-                  <span className="ml-2">
-                    (Página {courseData.pageNumber} de {courseData.totalPages})
-                  </span>
-                )}
               </>
             )}
           </p>
@@ -220,7 +215,7 @@ const Courses = () => {
                         <div className="flex items-center">
                           <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
                           <span className="text-sm font-medium dark:text-white">
-                            {parseFloat(course.ratingAverage).toFixed(1)}
+                            {course.ratingAverage}
                           </span>
                           <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
                             ({course.ratingCount} avaliações)
@@ -255,22 +250,11 @@ const Courses = () => {
                 >
                   Anterior
                 </button>
-                {Array.from({ length: Math.min(courseData.totalPages, 10) }, (_, i) => {
-                  const pageNum = Math.max(1, Math.min(courseData.totalPages, 
-                    courseData.pageNumber - 5 + i));
-                  if (pageNum <= courseData.totalPages) {
-                    return (
-                      <button
-                        key={pageNum}
-                        className={`px-3 py-1 rounded-md border text-sm font-medium ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200'}`}
-                        onClick={() => setCurrentPage(pageNum)}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  }
-                  return null;
-                })}
+                {courseData && (
+                  <span className="font-medium text-sm items-center mt-1">
+                    (Página {courseData.pageNumber} de {courseData.totalPages})
+                  </span>
+                )}
                 <button
                   className="px-3 py-1 rounded-md border text-sm font-medium disabled:opacity-50"
                   onClick={() => setCurrentPage((p) => Math.min(courseData.totalPages, p + 1))}

@@ -38,7 +38,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('https://localhost:7236/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const Register = () => {
       } else {
         toast({
           title: "Erro",
-          description: data.message || "Erro ao criar conta",
+          description: data.errors.errorMessages || "Erro ao criar conta",
           variant: "destructive",
         });
       }
