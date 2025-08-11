@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Star, Users, Clock, Calendar, Award, ExternalLink, BookOpen, Play, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
+import { courseService } from '@/services/courseService';
+import { Course } from '@/types/course';
 
 // Sample course data (should match the data structure from Courses.tsx)
 const courses = [
@@ -90,9 +93,43 @@ const CourseDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const course = courses.find(c => c.id === parseInt(id || ''));
-  
-  if (!course) {
+  const { data: course, isLoading, error } = useQuery({
+    queryKey: ['course', id],
+    queryFn: () => courseService.getCourseById(id!),
+    enabled: !!id,
+  });
+
+  // Add default frontend properties if missing from API
+  const enrichedCourse: Course | undefined = course ? {
+    ...course,
+    // Add default values for frontend-only properties if not provided by API
+    syllabus: course.syllabus || [
+      { title: "Conteúdo do curso", lessons: [{ title: "Em breve", duration: "TBD" }] }
+    ],
+    requirements: course.requirements || ["Informações não disponíveis"],
+    instructor: course.instructor || { name: "Instrutor", bio: "Informações não disponíveis" },
+    price: course.price || "Consulte a plataforma",
+    students: course.students || 0,
+    category: course.category || "Geral",
+    whatYoullLearn: course.whatYoullLearn || ["Informações em breve"],
+    platformUrl: course.courseUrl || course.platformUrl || "#"
+  } : undefined;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="text-center py-16">
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Carregando curso...</h3>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !enrichedCourse) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
         <Header />
@@ -120,8 +157,10 @@ const CourseDetails = () => {
     }
   };
 
-  const completedLessons = course.syllabus?.filter(lesson => lesson.completed).length || 0;
-  const totalLessons = course.syllabus?.length || 0;
+  const completedLessons = enrichedCourse.syllabus?.reduce((acc, section) => 
+    acc + (section.lessons?.filter(lesson => lesson.completed).length || 0), 0) || 0;
+  const totalLessons = enrichedCourse.syllabus?.reduce((acc, section) => 
+    acc + (section.lessons?.length || 0), 0) || 0;
   const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
   return (
@@ -147,42 +186,58 @@ const CourseDetails = () => {
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <Badge variant="secondary" className="dark:bg-gray-700 dark:text-gray-200">
-                    {course.category}
+                    {enrichedCourse.category}
                   </Badge>
-                  <Badge className={`${getLevelColor(course.level)}`}>
-                    {course.level}
-                  </Badge>
+                  {enrichedCourse.courseLevels && enrichedCourse.courseLevels.length > 0 && (
+                    <Badge className={`${getLevelColor(enrichedCourse.courseLevels[0])}`}>
+                      {enrichedCourse.courseLevels[0]}
+                    </Badge>
+                  )}
                 </div>
                 
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                  {course.title}
+                  {enrichedCourse.title}
                 </h1>
                 
                 <p className="text-gray-600 dark:text-gray-300 text-lg mb-6">
-                  {course.fullDescription || course.description}
+                  {enrichedCourse.description}
                 </p>
 
                 <div className="flex flex-wrap gap-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
-                  <div className="flex items-center">
-                    <Users className="h-4 w-4 mr-2" />
-                    <span>{course.students.toLocaleString()} alunos</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span>{course.duration}</span>
-                  </div>
+                  {enrichedCourse.students && (
+                    <div className="flex items-center">
+                      <Users className="h-4 w-4 mr-2" />
+                      <span>{enrichedCourse.students.toLocaleString()} alunos</span>
+                    </div>
+                  )}
+                  {enrichedCourse.durationInMinutes && (
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span>{Math.floor(enrichedCourse.durationInMinutes / 60)}h {enrichedCourse.durationInMinutes % 60}min</span>
+                    </div>
+                  )}
                   <div className="flex items-center">
                     <Star className="h-4 w-4 mr-2 text-yellow-400 fill-current" />
-                    <span className="text-gray-900 dark:text-white font-medium">{course.rating}</span>
+                    <span className="text-gray-900 dark:text-white font-medium">{enrichedCourse.ratingAverage}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                      ({enrichedCourse.ratingCount} avaliações)
+                    </span>
                   </div>
+                  {enrichedCourse.instructor && (
+                    <div className="flex items-center">
+                      <Award className="h-4 w-4 mr-2" />
+                      <span>por {enrichedCourse.instructor.name}</span>
+                    </div>
+                  )}
                   <div className="flex items-center">
-                    <Award className="h-4 w-4 mr-2" />
-                    <span>por {course.instructor}</span>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      {enrichedCourse.platform}
+                    </span>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  {course.tags.map((tag) => (
+                  {enrichedCourse.tags.map((tag) => (
                     <Badge key={tag} variant="outline" className="dark:border-gray-600 dark:text-gray-300">
                       {tag}
                     </Badge>
@@ -192,14 +247,14 @@ const CourseDetails = () => {
             </Card>
 
             {/* What You'll Learn */}
-            {course.whatYouWillLearn && (
+            {enrichedCourse.whatYoullLearn && (
               <Card className="dark:bg-gray-800 dark:border-gray-700">
                 <CardHeader>
                   <CardTitle className="dark:text-white">O que você vai aprender</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {course.whatYouWillLearn.map((item, index) => (
+                    {enrichedCourse.whatYoullLearn.map((item, index) => (
                       <li key={index} className="flex items-start">
                         <Play className="h-4 w-4 mr-3 mt-0.5 text-green-500 flex-shrink-0" />
                         <span className="text-gray-700 dark:text-gray-300">{item}</span>
@@ -211,7 +266,7 @@ const CourseDetails = () => {
             )}
 
             {/* Course Syllabus */}
-            {course.syllabus && (
+            {enrichedCourse.syllabus && (
               <Card className="dark:bg-gray-800 dark:border-gray-700">
                 <CardHeader>
                   <CardTitle className="dark:text-white">Conteúdo do Curso</CardTitle>
@@ -225,14 +280,21 @@ const CourseDetails = () => {
                   )}
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {course.syllabus.map((lesson, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-                        <div className="flex items-center">
-                          <Play className="h-4 w-4 mr-3 text-blue-500" />
-                          <span className="font-medium text-gray-900 dark:text-white">{lesson.title}</span>
+                  <div className="space-y-4">
+                    {enrichedCourse.syllabus.map((section, sectionIndex) => (
+                      <div key={sectionIndex}>
+                        <h4 className="font-medium text-gray-900 dark:text-white mb-2">{section.title}</h4>
+                        <div className="space-y-2 ml-4">
+                          {section.lessons.map((lesson, lessonIndex) => (
+                            <div key={lessonIndex} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                              <div className="flex items-center">
+                                <Play className="h-4 w-4 mr-3 text-blue-500" />
+                                <span className="font-medium text-gray-900 dark:text-white">{lesson.title}</span>
+                              </div>
+                              <span className="text-sm text-gray-500 dark:text-gray-400">{lesson.duration}</span>
+                            </div>
+                          ))}
                         </div>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{lesson.duration}</span>
                       </div>
                     ))}
                   </div>
@@ -241,14 +303,14 @@ const CourseDetails = () => {
             )}
 
             {/* Requirements */}
-            {course.requirements && (
+            {enrichedCourse.requirements && (
               <Card className="dark:bg-gray-800 dark:border-gray-700">
                 <CardHeader>
                   <CardTitle className="dark:text-white">Requisitos</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {course.requirements.map((requirement, index) => (
+                    {enrichedCourse.requirements.map((requirement, index) => (
                       <li key={index} className="flex items-start">
                         <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-3 mt-2 flex-shrink-0"></span>
                         <span className="text-gray-700 dark:text-gray-300">{requirement}</span>
@@ -267,7 +329,7 @@ const CourseDetails = () => {
               <CardContent className="p-6">
                 <div className="text-center mb-6">
                   <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    {course.price || 'Gratuito'}
+                    {enrichedCourse.price || 'Consulte a plataforma'}
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Acesso completo ao curso</p>
                 </div>
@@ -275,7 +337,7 @@ const CourseDetails = () => {
                 <Button 
                   className="w-full mb-4" 
                   size="lg"
-                  onClick={() => window.open(course.platformUrl, '_blank')}
+                  onClick={() => window.open(enrichedCourse.platformUrl, '_blank')}
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Acessar Curso na Plataforma
@@ -284,21 +346,33 @@ const CourseDetails = () => {
                 <Separator className="my-4" />
 
                 <div className="space-y-3 text-sm">
+                  {enrichedCourse.instructor && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Instrutor:</span>
+                      <span className="font-medium dark:text-white">{enrichedCourse.instructor.name}</span>
+                    </div>
+                  )}
+                  {enrichedCourse.durationInMinutes && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Duração:</span>
+                      <span className="font-medium dark:text-white">
+                        {Math.floor(enrichedCourse.durationInMinutes / 60)}h {enrichedCourse.durationInMinutes % 60}min
+                      </span>
+                    </div>
+                  )}
+                  {enrichedCourse.courseLevels && enrichedCourse.courseLevels.length > 0 && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Nível:</span>
+                      <span className="font-medium dark:text-white">{enrichedCourse.courseLevels.join(', ')}</span>
+                    </div>
+                  )}
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Instrutor:</span>
-                    <span className="font-medium dark:text-white">{course.instructor}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Duração:</span>
-                    <span className="font-medium dark:text-white">{course.duration}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Nível:</span>
-                    <span className="font-medium dark:text-white">{course.level}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
+                    <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Categoria:</span>
-                    <span className="font-medium dark:text-white">{course.category}</span>
+                    <span className="font-medium dark:text-white">{enrichedCourse.category}</span>
                   </div>
                 </div>
               </CardContent>
@@ -310,18 +384,22 @@ const CourseDetails = () => {
                 <CardTitle className="dark:text-white">Sobre o Instrutor</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center mb-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg mr-3">
-                    {course.instructor.charAt(0)}
-                  </div>
-                  <div>
-                    <div className="font-medium dark:text-white">{course.instructor}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">Instrutor</div>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300">
-                  {course.instructorBio || "Instrutor experiente com vasta experiência na área."}
-                </p>
+                {enrichedCourse.instructor && (
+                  <>
+                    <div className="flex items-center mb-3">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg mr-3">
+                        {enrichedCourse.instructor.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-medium dark:text-white">{enrichedCourse.instructor.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">Instrutor</div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {enrichedCourse.instructor.bio || "Instrutor experiente com vasta experiência na área."}
+                    </p>
+                  </>
+                )}
               </CardContent>
             </Card>
           </div>
