@@ -189,7 +189,7 @@ const CourseDetails = () => {
                     {enrichedCourse.category}
                   </Badge>
                   {enrichedCourse.courseLevels && enrichedCourse.courseLevels.length > 0 && (
-                    <Badge className={`${getLevelColor(enrichedCourse.courseLevels[0])}`}>
+                    <Badge variant='secondary' className={`${getLevelColor(enrichedCourse.courseLevels[0])}`}>
                       {enrichedCourse.courseLevels[0]}
                     </Badge>
                   )}
@@ -204,12 +204,6 @@ const CourseDetails = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-6 text-sm text-gray-500 dark:text-gray-400 mb-6">
-                  {enrichedCourse.students && (
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-2" />
-                      <span>{enrichedCourse.students.toLocaleString()} alunos</span>
-                    </div>
-                  )}
                   {enrichedCourse.durationInMinutes && (
                     <div className="flex items-center">
                       <Clock className="h-4 w-4 mr-2" />
@@ -226,14 +220,9 @@ const CourseDetails = () => {
                   {enrichedCourse.instructor && (
                     <div className="flex items-center">
                       <Award className="h-4 w-4 mr-2" />
-                      <span>por {enrichedCourse.instructor.name}</span>
+                      <span>por {enrichedCourse.platform}</span>
                     </div>
                   )}
-                  <div className="flex items-center">
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                      {enrichedCourse.platform}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -348,8 +337,8 @@ const CourseDetails = () => {
                 <div className="space-y-3 text-sm">
                   {enrichedCourse.instructor && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Instrutor:</span>
-                      <span className="font-medium dark:text-white">{enrichedCourse.instructor.name}</span>
+                      <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
+                      <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
                     </div>
                   )}
                   {enrichedCourse.durationInMinutes && (

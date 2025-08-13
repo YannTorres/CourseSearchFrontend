@@ -30,8 +30,6 @@ interface Roadmap {
   id: string;
   title: string;
   description: string;
-  category: string;
-  estimatedDuration: string;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   milestones: number;
   createdAt: string;
@@ -41,10 +39,8 @@ interface Roadmap {
 interface RoadmapFormData {
   title: string;
   description: string;
-  category: string;
   currentLevel: string;
   goals: string;
-  timeframe: string;
 }
 
 const Roadmaps = () => {
@@ -55,8 +51,6 @@ const Roadmaps = () => {
       id: '1',
       title: 'Full Stack Web Development',
       description: 'Complete journey from frontend to backend development with modern technologies',
-      category: 'Web Development',
-      estimatedDuration: '6 months',
       difficulty: 'Intermediate',
       milestones: 12,
       createdAt: '2024-01-15',
@@ -66,8 +60,6 @@ const Roadmaps = () => {
       id: '2',
       title: 'Data Science Mastery',
       description: 'From statistics basics to machine learning and advanced analytics',
-      category: 'Data Science',
-      estimatedDuration: '8 months',
       difficulty: 'Advanced',
       milestones: 15,
       createdAt: '2024-01-10',
@@ -77,8 +69,6 @@ const Roadmaps = () => {
       id: '3',
       title: 'UI/UX Design Fundamentals',
       description: 'Learn design principles, user research, and prototyping skills',
-      category: 'Design',
-      estimatedDuration: '4 months',
       difficulty: 'Beginner',
       milestones: 8,
       createdAt: '2024-01-20',
@@ -92,10 +82,8 @@ const Roadmaps = () => {
     defaultValues: {
       title: '',
       description: '',
-      category: '',
       currentLevel: '',
       goals: '',
-      timeframe: ''
     }
   });
 
@@ -108,8 +96,6 @@ const Roadmaps = () => {
       id: Date.now().toString(),
       title: data.title,
       description: data.description,
-      category: data.category,
-      estimatedDuration: data.timeframe,
       difficulty: 'Intermediate',
       milestones: 10,
       createdAt: new Date().toISOString().split('T')[0],
@@ -143,10 +129,10 @@ const Roadmaps = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              Learning Roadmaps
+              Roadmaps de aprendizado
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              Create personalized learning paths with AI assistance
+              Crie caminhos de aprendizagem personalizados com assistência de IA
             </p>
           </div>
 
@@ -154,14 +140,14 @@ const Roadmaps = () => {
             <DialogTrigger asChild>
               <Button size="lg" className="flex items-center gap-2">
                 <Plus className="h-5 w-5" />
-                Create Roadmap
+                Crie um Roadmap
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
-                <DialogTitle>Create Your Personalized Roadmap</DialogTitle>
+                <DialogTitle>Crie seu Roadmap Personalizado</DialogTitle>
                 <DialogDescription>
-                  Tell us about your learning goals and we'll create a customized roadmap for you.
+                  Conte-nos sobre seus objetivos de aprendizagem e criaremos um roteiro personalizado para você.
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>
@@ -171,9 +157,9 @@ const Roadmaps = () => {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Roadmap Title</FormLabel>
+                        <FormLabel>Título do Roadmap</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., Frontend Development Journey" {...field} />
+                          <Input placeholder="Ex: Jornada de Desenvolvimento Frontend" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -185,10 +171,10 @@ const Roadmaps = () => {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>Descrição</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Briefly describe what you want to learn..."
+                            placeholder="Descreva brevemente o objetivo desse Roadmap..."
                             {...field}
                           />
                         </FormControl>
@@ -197,7 +183,7 @@ const Roadmaps = () => {
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/*<div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="category"
@@ -225,23 +211,20 @@ const Roadmaps = () => {
                         </FormItem>
                       )}
                     />
-                  </div>
+                    </div>*/}
 
                   <FormField
                     control={form.control}
                     name="currentLevel"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Current Experience Level</FormLabel>
+                        <FormLabel>Nível de Experiência do Roadmap</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Tell us about your current knowledge and experience in this field..."
+                            placeholder="Conte-nos sobre seu conhecimento e experiência atuais nesta área..."
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription>
-                          This helps us tailor the roadmap to your skill level
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -252,16 +235,13 @@ const Roadmaps = () => {
                     name="goals"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Specific Goals</FormLabel>
+                        <FormLabel>Objetivos Especificos</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="What specific skills or outcomes do you want to achieve?"
+                            placeholder="Que habilidades ou resultados específicos você deseja alcançar?"
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription>
-                          Be as specific as possible about what you want to learn
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -273,10 +253,10 @@ const Roadmaps = () => {
                       variant="outline" 
                       onClick={() => setIsDialogOpen(false)}
                     >
-                      Cancel
+                      Cancelar
                     </Button>
                     <Button type="submit">
-                      Generate Roadmap
+                      Gerar o Roadmap
                     </Button>
                   </div>
                 </form>
@@ -292,7 +272,7 @@ const Roadmaps = () => {
               <div className="flex items-center">
                 <Map className="h-8 w-8 text-blue-600 mr-3" />
                 <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Roadmaps</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Roadmaps Totais</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">{roadmaps.length}</p>
                 </div>
               </div>
@@ -304,7 +284,7 @@ const Roadmaps = () => {
               <div className="flex items-center">
                 <Target className="h-8 w-8 text-green-600 mr-3" />
                 <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Completed</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Concluídos</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {roadmaps.filter(r => r.progress === 100).length}
                   </p>
@@ -318,7 +298,7 @@ const Roadmaps = () => {
               <div className="flex items-center">
                 <Clock className="h-8 w-8 text-orange-600 mr-3" />
                 <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">In Progress</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Em Progresso</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {roadmaps.filter(r => r.progress > 0 && r.progress < 100).length}
                   </p>
@@ -338,9 +318,6 @@ const Roadmaps = () => {
             >
               <CardHeader>
                 <div className="flex items-start justify-between mb-2">
-                  <Badge variant="secondary" className="text-xs dark:bg-gray-700 dark:text-gray-200">
-                    {roadmap.category}
-                  </Badge>
                   <Badge className={`text-xs ${getDifficultyColor(roadmap.difficulty)}`}>
                     {roadmap.difficulty}
                   </Badge>
@@ -356,10 +333,6 @@ const Roadmaps = () => {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <span className="flex items-center">
-                      <Clock className="h-4 w-4 mr-1" />
-                      {roadmap.estimatedDuration}
-                    </span>
                     <span className="flex items-center">
                       <Target className="h-4 w-4 mr-1" />
                       {roadmap.milestones} milestones
@@ -395,14 +368,10 @@ const Roadmaps = () => {
         {roadmaps.length === 0 && (
           <div className="text-center py-16">
             <Map className="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No roadmaps yet</h3>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sem Roadmaps ainda</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Create your first personalized learning roadmap to get started
+              Crie seu primeiro roadmap personalizado para começar sua jornada.
             </p>
-            <Button onClick={() => setIsDialogOpen(true)} size="lg">
-              <Plus className="h-5 w-5 mr-2" />
-              Create Your First Roadmap
-            </Button>
           </div>
         )}
       </div>
