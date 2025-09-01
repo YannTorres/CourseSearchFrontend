@@ -91,11 +91,13 @@ const Roadmaps = () => {
 
   const onSubmit = async (data: RoadmapFormData) => {
     try {
+      const token = localStorage.getItem('authToken');
       const response = await fetch('https://localhost:7236/api/roadmap', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        } as HeadersInit,
         body: JSON.stringify(data),
       });
 
