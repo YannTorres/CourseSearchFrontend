@@ -78,6 +78,7 @@ const Roadmaps = () => {
   ]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const form = useForm<RoadmapFormData>({
     defaultValues: {
@@ -91,6 +92,7 @@ const Roadmaps = () => {
 
   const onSubmit = async (data: RoadmapFormData) => {
     try {
+      setIsGenerating(true);
       const token = localStorage.getItem('authToken');
       const response = await fetch('https://localhost:7236/api/roadmap/generate-with-ai', {
         method: 'POST',
@@ -127,6 +129,8 @@ const Roadmaps = () => {
       }
     } catch (error) {
       console.error('Error creating roadmap:', error);
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -309,18 +313,37 @@ const Roadmaps = () => {
                     )}
                   />
 
-                  <div className="flex justify-end gap-3 pt-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setIsDialogOpen(false)}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button type="submit">
-                      Gerar o Roadmap
-                    </Button>
-                  </div>
+                   {isGenerating && (
+                     <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4 mb-4">
+                       <div className="flex items-center">
+                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
+                         <p className="text-blue-700 dark:text-blue-300 text-sm">
+                           Estamos gerando seu roadmap personalizado com IA... Isso pode levar alguns momentos.
+                         </p>
+                       </div>
+                     </div>
+                   )}
+
+                   <div className="flex justify-end gap-3 pt-4">
+                     <Button 
+                       type="button" 
+                       variant="outline" 
+                       onClick={() => setIsDialogOpen(false)}
+                       disabled={isGenerating}
+                     >
+                       Cancelar
+                     </Button>
+                     <Button type="submit" disabled={isGenerating}>
+                       {isGenerating ? (
+                         <>
+                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                           Gerando...
+                         </>
+                       ) : (
+                         'Gerar o Roadmap'
+                       )}
+                     </Button>
+                   </div>
                 </form>
               </Form>
             </DialogContent>
