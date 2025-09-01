@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Map, Clock, Target, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +36,15 @@ interface Roadmap {
   progress: number;
 }
 
+interface ApiRoadmap {
+  id: string;
+  experienceLevel: number;
+  title: string;
+  description: string;
+  stepsCount: number;
+  createdAt: string;
+}
+
 interface RoadmapFormData {
   title: string;
   description: string;
@@ -47,35 +56,7 @@ interface RoadmapFormData {
 const Roadmaps = () => {
   const navigate = useNavigate();
   
-  const [roadmaps, setRoadmaps] = useState<Roadmap[]>([
-    {
-      id: '1',
-      title: 'Full Stack Web Development',
-      description: 'Complete journey from frontend to backend development with modern technologies',
-      difficulty: 'Intermediate',
-      milestones: 12,
-      createdAt: '2024-01-15',
-      progress: 45
-    },
-    {
-      id: '2',
-      title: 'Data Science Mastery',
-      description: 'From statistics basics to machine learning and advanced analytics',
-      difficulty: 'Advanced',
-      milestones: 15,
-      createdAt: '2024-01-10',
-      progress: 20
-    },
-    {
-      id: '3',
-      title: 'UI/UX Design Fundamentals',
-      description: 'Learn design principles, user research, and prototyping skills',
-      difficulty: 'Beginner',
-      milestones: 8,
-      createdAt: '2024-01-20',
-      progress: 75
-    }
-  ]);
+  const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -89,6 +70,50 @@ const Roadmaps = () => {
       experienceLevel: 3, // NotSpecified
     }
   });
+
+  const convertApiRoadmapToRoadmap = (apiRoadmap: ApiRoadmap): Roadmap => {
+    const difficulty = apiRoadmap.experienceLevel === 0 ? 'Beginner' : 
+                      apiRoadmap.experienceLevel === 1 ? 'Intermediate' : 'Advanced';
+    
+    return {
+      id: apiRoadmap.id,
+      title: apiRoadmap.title,
+      description: apiRoadmap.description,
+      difficulty,
+      milestones: apiRoadmap.stepsCount,
+      createdAt: new Date(apiRoadmap.createdAt).toISOString().split('T')[0],
+      progress: 0 // Default progress
+    };
+  };
+
+  const fetchRoadmaps = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      const response = await fetch('https://localhost:7236/api/roadmap', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        // No roadmaps found
+        setRoadmaps([]);
+      } else if (response.status === 200) {
+        const data = await response.json();
+        const convertedRoadmaps = data.roadmaps.map(convertApiRoadmapToRoadmap);
+        setRoadmaps(convertedRoadmaps);
+      }
+    } catch (error) {
+      console.error('Error fetching roadmaps:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoadmaps();
+  }, []);
 
   const onSubmit = async (data: RoadmapFormData) => {
     try {
@@ -107,21 +132,8 @@ const Roadmaps = () => {
         const result = await response.json();
         console.log('Roadmap created:', result);
         
-        // Create a placeholder roadmap with returned data
-        const difficulty = data.experienceLevel === 0 ? 'Beginner' : 
-                          data.experienceLevel === 1 ? 'Intermediate' : 'Advanced';
-        
-        const newRoadmap: Roadmap = {
-          id: Date.now().toString(),
-          title: result.title || data.title,
-          description: data.description,
-          difficulty,
-          milestones: 10,
-          createdAt: new Date().toISOString().split('T')[0],
-          progress: 0
-        };
-
-        setRoadmaps(prev => [newRoadmap, ...prev]);
+        // Refresh roadmaps from server
+        await fetchRoadmaps();
         setIsDialogOpen(false);
         form.reset();
       } else {
