@@ -39,8 +39,9 @@ interface Roadmap {
 interface RoadmapFormData {
   title: string;
   description: string;
-  currentLevel: string;
-  goals: string;
+  objective: string;
+  priorityTechs: string;
+  experienceLevel: number;
 }
 
 const Roadmaps = () => {
@@ -82,29 +83,49 @@ const Roadmaps = () => {
     defaultValues: {
       title: '',
       description: '',
-      currentLevel: '',
-      goals: '',
+      objective: '',
+      priorityTechs: '',
+      experienceLevel: 3, // NotSpecified
     }
   });
 
-  const onSubmit = (data: RoadmapFormData) => {
-    // Here you would normally send the data to AI to generate the roadmap
-    console.log('Form submitted:', data);
-    
-    // For now, create a placeholder roadmap
-    const newRoadmap: Roadmap = {
-      id: Date.now().toString(),
-      title: data.title,
-      description: data.description,
-      difficulty: 'Intermediate',
-      milestones: 10,
-      createdAt: new Date().toISOString().split('T')[0],
-      progress: 0
-    };
+  const onSubmit = async (data: RoadmapFormData) => {
+    try {
+      const response = await fetch('https://localhost:7236/api/roadmap', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    setRoadmaps(prev => [newRoadmap, ...prev]);
-    setIsDialogOpen(false);
-    form.reset();
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Roadmap created:', result);
+        
+        // Create a placeholder roadmap with returned data
+        const difficulty = data.experienceLevel === 0 ? 'Beginner' : 
+                          data.experienceLevel === 1 ? 'Intermediate' : 'Advanced';
+        
+        const newRoadmap: Roadmap = {
+          id: Date.now().toString(),
+          title: result.title || data.title,
+          description: data.description,
+          difficulty,
+          milestones: 10,
+          createdAt: new Date().toISOString().split('T')[0],
+          progress: 0
+        };
+
+        setRoadmaps(prev => [newRoadmap, ...prev]);
+        setIsDialogOpen(false);
+        form.reset();
+      } else {
+        console.error('Failed to create roadmap');
+      }
+    } catch (error) {
+      console.error('Error creating roadmap:', error);
+    }
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -215,13 +236,13 @@ const Roadmaps = () => {
 
                   <FormField
                     control={form.control}
-                    name="currentLevel"
+                    name="priorityTechs"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nível de Experiência do Roadmap</FormLabel>
+                        <FormLabel>Tecnologias Prioritárias</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Conte-nos sobre seu conhecimento e experiência atuais nesta área..."
+                            placeholder="Quais tecnologias ou ferramentas você gostaria de focar? (ex: React, Node.js, Python...)"
                             {...field}
                           />
                         </FormControl>
@@ -232,10 +253,49 @@ const Roadmaps = () => {
 
                   <FormField
                     control={form.control}
-                    name="goals"
+                    name="experienceLevel"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Objetivos Especificos</FormLabel>
+                        <FormLabel>Nível de Experiência</FormLabel>
+                        <FormControl>
+                          <div className="flex gap-2">
+                            <Button
+                              type="button"
+                              variant={field.value === 0 ? "default" : "outline"}
+                              onClick={() => field.onChange(0)}
+                              className="flex-1"
+                            >
+                              Iniciante
+                            </Button>
+                            <Button
+                              type="button"
+                              variant={field.value === 1 ? "default" : "outline"}
+                              onClick={() => field.onChange(1)}
+                              className="flex-1"
+                            >
+                              Intermediário
+                            </Button>
+                            <Button
+                              type="button"
+                              variant={field.value === 2 ? "default" : "outline"}
+                              onClick={() => field.onChange(2)}
+                              className="flex-1"
+                            >
+                              Avançado
+                            </Button>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="objective"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Objetivos Específicos</FormLabel>
                         <FormControl>
                           <Textarea 
                             placeholder="Que habilidades ou resultados específicos você deseja alcançar?"
