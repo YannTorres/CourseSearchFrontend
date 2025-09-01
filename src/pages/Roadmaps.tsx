@@ -92,7 +92,7 @@ const Roadmaps = () => {
   const onSubmit = async (data: RoadmapFormData) => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://localhost:7236/api/roadmap', {
+      const response = await fetch('https://localhost:7236/api/roadmap/generate-with-ai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
