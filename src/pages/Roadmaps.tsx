@@ -121,13 +121,10 @@ const Roadmaps = () => {
         setIsDialogOpen(false);
         form.reset();
       } else {
-        const errorText = await response.text();
-        console.error('Failed to create roadmap:', response.status, response.statusText, errorText);
-        alert(`Erro ao criar roadmap: ${response.status} - ${response.statusText}. Verifique se a API está rodando em https://localhost:7236`);
+        console.error('Failed to create roadmap');
       }
     } catch (error) {
       console.error('Error creating roadmap:', error);
-      alert('Erro de conexão. Verifique se a API está rodando em https://localhost:7236');
     }
   };
 
