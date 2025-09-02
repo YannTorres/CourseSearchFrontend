@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import Header from '@/components/Header';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Course {
   id: string;
@@ -35,155 +36,96 @@ interface Roadmap {
 const RoadmapDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const formatDuration = (minutes: number): string => {
+    if (minutes < 60) return `${minutes} minutes`;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    if (hours < 24) {
+      return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours} hours`;
+    }
+    const days = Math.floor(hours / 24);
+    const remainingHours = hours % 24;
+    return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days} days`;
+  };
 
   useEffect(() => {
-    // Mock data - in a real app, this would fetch from an API
-    const mockRoadmaps: Roadmap[] = [
-      {
-        id: '1',
-        title: 'Full Stack Web Development',
-        description: 'Complete journey from frontend to backend development with modern technologies. Learn HTML, CSS, JavaScript, React, Node.js, databases, and deployment strategies.',
-        category: 'Web Development',
-        estimatedDuration: '6 months',
-        difficulty: 'Intermediate',
-        milestones: 12,
-        createdAt: '2024-01-15',
-        progress: 45,
-        courses: [
-          {
-            id: 'c1',
-            title: 'HTML & CSS Fundamentals',
-            description: 'Master the building blocks of web development',
-            duration: '3 weeks',
-            difficulty: 'Beginner',
-            isCompleted: true,
-            lessons: 24,
-            instructor: 'Sarah Johnson'
-          },
-          {
-            id: 'c2',
-            title: 'JavaScript Essentials',
-            description: 'Learn modern JavaScript programming concepts',
-            duration: '4 weeks',
-            difficulty: 'Intermediate',
-            isCompleted: true,
-            lessons: 32,
-            instructor: 'Mike Chen'
-          },
-          {
-            id: 'c3',
-            title: 'React Development',
-            description: 'Build dynamic user interfaces with React',
-            duration: '5 weeks',
-            difficulty: 'Intermediate',
-            isCompleted: false,
-            lessons: 40,
-            instructor: 'Emily Rodriguez'
-          },
-          {
-            id: 'c4',
-            title: 'Node.js & Express',
-            description: 'Server-side development with Node.js',
-            duration: '4 weeks',
-            difficulty: 'Intermediate',
-            isCompleted: false,
-            lessons: 28,
-            instructor: 'David Kim'
-          },
-          {
-            id: 'c5',
-            title: 'Database Design & MongoDB',
-            description: 'Learn database concepts and MongoDB',
-            duration: '3 weeks',
-            difficulty: 'Intermediate',
-            isCompleted: false,
-            lessons: 20,
-            instructor: 'Lisa Wang'
-          }
-        ]
-      },
-      {
-        id: '2',
-        title: 'Data Science Mastery',
-        description: 'From statistics basics to machine learning and advanced analytics',
-        category: 'Data Science',
-        estimatedDuration: '8 months',
-        difficulty: 'Advanced',
-        milestones: 15,
-        createdAt: '2024-01-10',
-        progress: 20,
-        courses: [
-          {
-            id: 'c6',
-            title: 'Statistics Fundamentals',
-            description: 'Essential statistical concepts for data science',
-            duration: '4 weeks',
-            difficulty: 'Beginner',
-            isCompleted: true,
-            lessons: 30,
-            instructor: 'Dr. Robert Smith'
-          },
-          {
-            id: 'c7',
-            title: 'Python for Data Science',
-            description: 'Learn Python programming for data analysis',
-            duration: '5 weeks',
-            difficulty: 'Intermediate',
-            isCompleted: false,
-            lessons: 35,
-            instructor: 'Anna Thompson'
-          }
-        ]
-      },
-      {
-        id: '3',
-        title: 'UI/UX Design Fundamentals',
-        description: 'Learn design principles, user research, and prototyping skills',
-        category: 'Design',
-        estimatedDuration: '4 months',
-        difficulty: 'Beginner',
-        milestones: 8,
-        createdAt: '2024-01-20',
-        progress: 75,
-        courses: [
-          {
-            id: 'c8',
-            title: 'Design Principles',
-            description: 'Core principles of visual design',
-            duration: '2 weeks',
-            difficulty: 'Beginner',
-            isCompleted: true,
-            lessons: 16,
-            instructor: 'Jessica Martinez'
-          },
-          {
-            id: 'c9',
-            title: 'User Research Methods',
-            description: 'Understanding user needs and behaviors',
-            duration: '3 weeks',
-            difficulty: 'Intermediate',
-            isCompleted: true,
-            lessons: 20,
-            instructor: 'Tom Wilson'
-          },
-          {
-            id: 'c10',
-            title: 'Prototyping with Figma',
-            description: 'Create interactive prototypes and wireframes',
-            duration: '4 weeks',
-            difficulty: 'Intermediate',
-            isCompleted: false,
-            lessons: 24,
-            instructor: 'Maria Garcia'
-          }
-        ]
-      }
-    ];
+    const fetchRoadmap = async () => {
+      if (!id || !user) return;
 
-    const foundRoadmap = mockRoadmaps.find(r => r.id === id);
-    setRoadmap(foundRoadmap || null);
-  }, [id]);
+      try {
+        setIsLoading(true);
+        const token = localStorage.getItem('authToken');
+        
+        const response = await fetch(`https://localhost:7236/api/roadmap/${id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Map API response to component structure
+          const mappedRoadmap: Roadmap = {
+            id: data.id,
+            title: data.roadmapTitle,
+            description: data.description,
+            difficulty: data.roadmapLevel as 'Beginner' | 'Intermediate' | 'Advanced',
+            milestones: data.steps,
+            // Static values as requested
+            category: 'Learning Path',
+            estimatedDuration: '4-8 weeks',
+            createdAt: '2024-01-01',
+            progress: Math.round((data.courses.filter((c: any) => c.isCompleted).length / data.courses.length) * 100),
+            courses: data.courses
+              .sort((a: any, b: any) => a.stepOrder - b.stepOrder)
+              .map((course: any) => ({
+                id: course.id,
+                title: course.title,
+                description: course.description,
+                duration: formatDuration(course.durationInMinutes),
+                difficulty: (course.courseLevels[0] || 'Intermediate') as 'Beginner' | 'Intermediate' | 'Advanced',
+                isCompleted: course.isCompleted,
+                // Static values as requested
+                lessons: Math.floor(course.durationInMinutes / 15) || 10,
+                instructor: 'AI Generated'
+              }))
+          };
+          
+          setRoadmap(mappedRoadmap);
+        } else {
+          console.error('Failed to fetch roadmap:', response.statusText);
+          setRoadmap(null);
+        }
+      } catch (error) {
+        console.error('Error fetching roadmap:', error);
+        setRoadmap(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRoadmap();
+  }, [id, user]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Loading roadmap...</h1>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!roadmap) {
     return (
@@ -191,10 +133,10 @@ const RoadmapDetails = () => {
         <Header />
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Caminho não encontrado</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Roadmap not found</h1>
             <Button onClick={() => navigate('/roadmaps')} className="mt-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Voltar
+              Back to Roadmaps
             </Button>
           </div>
         </div>
