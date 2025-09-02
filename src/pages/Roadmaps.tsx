@@ -30,7 +30,7 @@ interface Roadmap {
   id: string;
   title: string;
   description: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: 'Iniciante' | 'Intermediário' | 'Avançado';
   milestones: number;
   createdAt: string;
   progress: number;
@@ -67,13 +67,13 @@ const Roadmaps = () => {
       description: '',
       objective: '',
       priorityTechs: '',
-      experienceLevel: 3, // NotSpecified
+      experienceLevel: 3, 
     }
   });
 
   const convertApiRoadmapToRoadmap = (apiRoadmap: ApiRoadmap): Roadmap => {
-    const difficulty = apiRoadmap.experienceLevel === 0 ? 'Beginner' : 
-                      apiRoadmap.experienceLevel === 1 ? 'Intermediate' : 'Advanced';
+    const difficulty = apiRoadmap.experienceLevel === 0 ? 'Iniciante' : 
+                      apiRoadmap.experienceLevel === 1 ? 'Intermediário' : 'Avançado';
     
     return {
       id: apiRoadmap.id,
@@ -82,7 +82,7 @@ const Roadmaps = () => {
       difficulty,
       milestones: apiRoadmap.stepsCount,
       createdAt: new Date(apiRoadmap.createdAt).toISOString().split('T')[0],
-      progress: 0 // Default progress
+      progress: 0 
     };
   };
 
@@ -99,7 +99,6 @@ const Roadmaps = () => {
       });
 
       if (response.status === 204) {
-        // No roadmaps found
         setRoadmaps([]);
       } else if (response.status === 200) {
         const data = await response.json();
@@ -132,7 +131,6 @@ const Roadmaps = () => {
         const result = await response.json();
         console.log('Roadmap created:', result);
         
-        // Refresh roadmaps from server
         await fetchRoadmaps();
         setIsDialogOpen(false);
         form.reset();
@@ -148,9 +146,9 @@ const Roadmaps = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'Advanced': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      case 'Iniciante': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'Intermediário': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'Avançado': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     }
   };
@@ -168,10 +166,10 @@ const Roadmaps = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              Roadmaps de aprendizado
+              Recomendações de aprendizado
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              Crie caminhos de aprendizagem personalizados com assistência de IA
+              Crie caminhos de aprendizagem personalizados com recomendações da IA
             </p>
           </div>
 
@@ -179,12 +177,12 @@ const Roadmaps = () => {
             <DialogTrigger asChild>
               <Button size="lg" className="flex items-center gap-2">
                 <Plus className="h-5 w-5" />
-                Crie um Roadmap
+                Criar
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
-                <DialogTitle>Crie seu Roadmap Personalizado</DialogTitle>
+                <DialogTitle>Crie seu Caminho de Aprendizado Personalizado</DialogTitle>
                 <DialogDescription>
                   Conte-nos sobre seus objetivos de aprendizagem e criaremos um roteiro personalizado para você.
                 </DialogDescription>
@@ -196,7 +194,7 @@ const Roadmaps = () => {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Título do Roadmap</FormLabel>
+                        <FormLabel>Título</FormLabel>
                         <FormControl>
                           <Input placeholder="Ex: Jornada de Desenvolvimento Frontend" {...field} />
                         </FormControl>
@@ -222,45 +220,15 @@ const Roadmaps = () => {
                     )}
                   />
 
-                  {/*<div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="category"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Category</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., Web Development" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="timeframe"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Desired Timeframe</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., 3 months" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    </div>*/}
-
                   <FormField
                     control={form.control}
-                    name="priorityTechs"
+                    name="objective"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Tecnologias Prioritárias</FormLabel>
+                        <FormLabel>Objetivo do Caminho</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Quais tecnologias ou ferramentas você gostaria de focar? (ex: React, Node.js, Python...)"
+                            placeholder="Que habilidades ou resultados específicos você deseja alcançar?"
                             {...field}
                           />
                         </FormControl>
@@ -310,13 +278,13 @@ const Roadmaps = () => {
 
                   <FormField
                     control={form.control}
-                    name="objective"
+                    name="priorityTechs"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Objetivos Específicos</FormLabel>
+                        <FormLabel>Tecnologias Prioritárias</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Que habilidades ou resultados específicos você deseja alcançar?"
+                            placeholder="Quais tecnologias ou ferramentas você gostaria de focar? (ex: React, Node.js, Python...)"
                             {...field}
                           />
                         </FormControl>
@@ -331,6 +299,7 @@ const Roadmaps = () => {
                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
                          <p className="text-blue-700 dark:text-blue-300 text-sm">
                            Estamos gerando seu roadmap personalizado com IA... Isso pode levar alguns momentos.
+                           Pode fechar esta aba e continuar navegando.
                          </p>
                        </div>
                      </div>

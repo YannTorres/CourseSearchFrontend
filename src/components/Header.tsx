@@ -62,7 +62,7 @@ const Header = () => {
             <Tabs value={getActiveTab()} onValueChange={handleTabChange}>
               <TabsList className={isAuthenticated ? "grid grid-cols-2" : "grid grid-cols-2"}>
                 <TabsTrigger value="home">Cursos</TabsTrigger>
-                <TabsTrigger value="roadmaps">Roadmaps</TabsTrigger>
+                <TabsTrigger value="roadmaps">Recomendações</TabsTrigger>
               </TabsList>
             </Tabs>
           </nav>
