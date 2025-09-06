@@ -15,6 +15,12 @@ export const courseService = {
     if (filters.search) {
       params.append('search', filters.search);
     }
+    if (filters.sortby) {
+      params.append('sortby', filters.sortby);
+    }
+    if (filters.sortOrder) {
+      params.append('sortOrder', filters.sortOrder);
+    }
 
     const response = await fetch(`${API_BASE_URL}/course?${params.toString()}`);
     

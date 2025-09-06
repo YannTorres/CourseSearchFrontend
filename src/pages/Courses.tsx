@@ -18,6 +18,7 @@ const Courses = () => {
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [levelFilter, setLevelFilter] = useState('all');
   const [sortBy, setSortBy] = useState('relevance');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [courseData, setCourseData] = useState<CourseResponse | null>(null);
@@ -30,7 +31,9 @@ const Courses = () => {
       const response = await courseService.getCourses({
         pageNumber: currentPage,
         pageSize: resultsPerPage,
-        search: searchQuery.trim() || undefined
+        search: searchQuery.trim() || undefined,
+        sortby: sortBy !== 'relevance' ? sortBy : undefined,
+        sortOrder: sortBy !== 'relevance' ? sortOrder : undefined
       });
       setCourseData(response);
     } catch (error) {
@@ -53,24 +56,14 @@ const Courses = () => {
 
   useEffect(() => {
     fetchCourses();
-  }, [currentPage, searchQuery]);
+  }, [currentPage, searchQuery, sortBy, sortOrder]);
 
   const filteredCourses = courseData?.courses ? courseData.courses.filter(course => {
-    // Filter by level
+    // Filter by level (client-side filter since API doesn't support this yet)
     if (levelFilter !== 'all') {
       return course.courseLevels.some(level => level.toLowerCase() === levelFilter.toLowerCase());
     }
     return true;
-  }).sort((a, b) => {
-    // Sort courses
-    switch (sortBy) {
-      case 'rating':
-        return parseFloat(b.ratingAverage) - parseFloat(a.ratingAverage);
-      case 'title':
-        return a.title.localeCompare(b.title);
-      default:
-        return 0;
-    }
   }) : [];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -152,6 +145,17 @@ const Courses = () => {
                 <SelectItem value="relevance">Relevância</SelectItem>
                 <SelectItem value="rating">Avaliação</SelectItem>
                 <SelectItem value="title">Título</SelectItem>
+                <SelectItem value="ratingCount">Número de Avaliações</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortOrder} onValueChange={setSortOrder}>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Ordem" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="desc">Decrescente</SelectItem>
+                <SelectItem value="asc">Crescente</SelectItem>
               </SelectContent>
             </Select>
           </div>

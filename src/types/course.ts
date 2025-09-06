@@ -48,4 +48,6 @@ export interface CourseFilters {
   pageNumber?: number;
   pageSize?: number;
   search?: string;
+  sortby?: string;
+  sortOrder?: string;
 }
