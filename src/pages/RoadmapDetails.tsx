@@ -197,16 +197,8 @@ const RoadmapDetails = () => {
                   <span>{roadmap.estimatedDuration}</span>
                 </div>
                 <div className="flex items-center text-gray-600 dark:text-gray-400">
-                  <Target className="h-5 w-5 mr-2" />
-                  <span>{roadmap.milestones} milestones</span>
-                </div>
-                <div className="flex items-center text-gray-600 dark:text-gray-400">
                   <BookOpen className="h-5 w-5 mr-2" />
-                  <span>{roadmap.courses.length} courses</span>
-                </div>
-                <div className="flex items-center text-gray-600 dark:text-gray-400">
-                  <Users className="h-5 w-5 mr-2" />
-                  <span>{completedCourses}/{roadmap.courses.length} completed</span>
+                  <span>{roadmap.courses.length} Cursos </span>
                 </div>
               </div>
             </div>
