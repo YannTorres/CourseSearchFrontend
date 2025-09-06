@@ -16,14 +16,13 @@ const Courses = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [levelFilter, setLevelFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('relevance');
+  const [sortBy, setSortBy] = useState('title');
   const [sortOrder, setSortOrder] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [courseData, setCourseData] = useState<CourseResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const resultsPerPage = 20;
+  const resultsPerPage = 12;
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -32,8 +31,8 @@ const Courses = () => {
         pageNumber: currentPage,
         pageSize: resultsPerPage,
         search: searchQuery.trim() || undefined,
-        sortby: sortBy !== 'relevance' ? sortBy : undefined,
-        sortOrder: sortBy !== 'relevance' ? sortOrder : undefined
+        sortby: sortBy,
+        sortOrder: sortOrder
       });
       setCourseData(response);
     } catch (error) {
@@ -59,10 +58,6 @@ const Courses = () => {
   }, [currentPage, searchQuery, sortBy, sortOrder]);
 
   const filteredCourses = courseData?.courses ? courseData.courses.filter(course => {
-    // Filter by level (client-side filter since API doesn't support this yet)
-    if (levelFilter !== 'all') {
-      return course.courseLevels.some(level => level.toLowerCase() === levelFilter.toLowerCase());
-    }
     return true;
   }) : [];
 
@@ -123,26 +118,13 @@ const Courses = () => {
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-gray-500" />
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filtros:</span>
-            </div>
-            
-            <Select value={levelFilter} onValueChange={setLevelFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Nível" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os níveis</SelectItem>
-                <SelectItem value="beginner">Iniciante</SelectItem>
-                <SelectItem value="intermediate">Intermediário</SelectItem>
-                <SelectItem value="advanced">Avançado</SelectItem>
-              </SelectContent>
-            </Select>
+            </div>        
 
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="relevance">Relevância</SelectItem>
                 <SelectItem value="rating">Avaliação</SelectItem>
                 <SelectItem value="title">Título</SelectItem>
                 <SelectItem value="ratingCount">Número de Avaliações</SelectItem>
@@ -222,7 +204,7 @@ const Courses = () => {
                             {course.ratingAverage}
                           </span>
                           <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                            ({course.ratingCount} avaliações)
+                            ({course.ratingCount})
                           </span>
                         </div>
                       </div>

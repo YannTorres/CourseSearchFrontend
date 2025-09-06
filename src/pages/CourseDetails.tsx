@@ -236,7 +236,7 @@ const CourseDetails = () => {
             </Card>
 
             {/* What You'll Learn */}
-            {enrichedCourse.whatYoullLearn && (
+            {/* {enrichedCourse.whatYoullLearn && (
               <Card className="dark:bg-gray-800 dark:border-gray-700">
                 <CardHeader>
                   <CardTitle className="dark:text-white">O que você vai aprender</CardTitle>
@@ -252,7 +252,7 @@ const CourseDetails = () => {
                   </ul>
                 </CardContent>
               </Card>
-            )}
+            )}*/}
 
             {/* Course Syllabus */}
             {enrichedCourse.syllabus && (
@@ -287,25 +287,6 @@ const CourseDetails = () => {
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Requirements */}
-            {enrichedCourse.requirements && (
-              <Card className="dark:bg-gray-800 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="dark:text-white">Requisitos</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {enrichedCourse.requirements.map((requirement, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-3 mt-2 flex-shrink-0"></span>
-                        <span className="text-gray-700 dark:text-gray-300">{requirement}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </CardContent>
               </Card>
             )}
@@ -359,38 +340,10 @@ const CourseDetails = () => {
                     <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
                     <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Categoria:</span>
-                    <span className="font-medium dark:text-white">{enrichedCourse.category}</span>
-                  </div>
                 </div>
               </CardContent>
             </Card>
-
-            {/* Instructor Info */}
-            <Card className="dark:bg-gray-800 dark:border-gray-700">
-              <CardHeader>
-                <CardTitle className="dark:text-white">Sobre o Instrutor</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {enrichedCourse.instructor && (
-                  <>
-                    <div className="flex items-center mb-3">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg mr-3">
-                        {enrichedCourse.instructor.name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="font-medium dark:text-white">{enrichedCourse.instructor.name}</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">Instrutor</div>
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                      {enrichedCourse.instructor.bio || "Instrutor experiente com vasta experiência na área."}
-                    </p>
-                  </>
-                )}
-              </CardContent>
-            </Card>
+        
           </div>
         </div>
       </div>
