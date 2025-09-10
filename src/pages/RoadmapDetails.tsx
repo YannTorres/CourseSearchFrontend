@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Target, Users, BookOpen, Play, CheckCircle, Circle } from 'lucide-react';
+import { ArrowLeft, Clock, Target, Users, BookOpen, Play, CheckCircle, Circle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -56,6 +56,8 @@ const RoadmapDetails = () => {
 
   const toggleCourseCompletion = async (courseId: string, isCompleted: boolean) => {
     if (!id || !user) return;
+
+    console.log(courseId)
 
     try {
       const token = localStorage.getItem('authToken');
@@ -342,7 +344,7 @@ const RoadmapDetails = () => {
                               {course.difficulty}
                             </Badge>
                             {course.isCompleted && (
-                              <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                              <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                 Completo
                               </Badge>
                             )}
@@ -374,8 +376,8 @@ const RoadmapDetails = () => {
                             variant={course.isCompleted ? "outline" : "default"}
                             className="flex items-center gap-2"
                           >
-                            <Play className="h-4 w-4" />
-                            {course.isCompleted ? "Review" : "Ir para o Curso"}
+                            {course.isCompleted ? <Star className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                            {course.isCompleted ? "Avaliar" : "Ir para o Curso"}
                           </Button>
                         </div>
                       </div>
