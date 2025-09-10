@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Checkbox } from '@/components/ui/checkbox';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -51,6 +52,69 @@ const RoadmapDetails = () => {
     const days = Math.floor(hours / 24);
     const remainingHours = hours % 24;
     return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days} days`;
+  };
+
+  const toggleCourseCompletion = async (courseId: string, isCompleted: boolean) => {
+    if (!id || !user) return;
+
+    try {
+      const token = localStorage.getItem('authToken');
+      
+      const response = await fetch(`https://localhost:7236/api/roadmap/${id}/course/${courseId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isCompleted }),
+      });
+
+      if (response.status === 204) {
+        // Success - update local state
+        setRoadmap(prev => {
+          if (!prev) return prev;
+          
+          const updatedCourses = prev.courses.map(course =>
+            course.id === courseId ? { ...course, isCompleted } : course
+          );
+          
+          const completedCount = updatedCourses.filter(c => c.isCompleted).length;
+          const progress = Math.round((completedCount / updatedCourses.length) * 100);
+          
+          return {
+            ...prev,
+            courses: updatedCourses,
+            progress
+          };
+        });
+        
+        toast({
+          title: "Sucesso",
+          description: isCompleted ? "Curso marcado como concluído!" : "Curso desmarcado como concluído!",
+        });
+      } else if (response.status === 401) {
+        console.error('Authentication failed, redirecting to login');
+        toast({
+          title: "Sessão expirada",
+          description: "Por favor, faça login novamente para continuar.",
+          variant: "destructive",
+        });
+        navigate('/login');
+      } else {
+        toast({
+          title: "Erro",
+          description: "Não foi possível atualizar o status do curso. Tente novamente.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error updating course completion:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível atualizar o status do curso. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
@@ -257,11 +321,13 @@ const RoadmapDetails = () => {
                   <div className="flex items-start gap-4">
                     {/* Course Status Icon */}
                     <div className="flex-shrink-0 mt-1">
-                      {course.isCompleted ? (
-                        <CheckCircle className="h-6 w-6 text-green-600" />
-                      ) : (
-                        <Circle className="h-6 w-6 text-gray-400" />
-                      )}
+                      <Checkbox
+                        checked={course.isCompleted}
+                        onCheckedChange={(checked) => 
+                          toggleCourseCompletion(course.id, checked === true)
+                        }
+                        className="h-6 w-6"
+                      />
                     </div>
 
                     {/* Course Content */}
