@@ -104,6 +104,10 @@ const Roadmaps = () => {
         const data = await response.json();
         const convertedRoadmaps = data.roadmaps.map(convertApiRoadmapToRoadmap);
         setRoadmaps(convertedRoadmaps);
+      } else if (response.status === 401) {
+        console.error('Authentication failed, redirecting to login');
+        navigate('/login');
+        return;
       }
     } catch (error) {
       console.error('Error fetching roadmaps:', error);

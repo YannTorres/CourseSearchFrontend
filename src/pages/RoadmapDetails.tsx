@@ -99,6 +99,10 @@ const RoadmapDetails = () => {
           };
           
           setRoadmap(mappedRoadmap);
+        } else if (response.status === 401) {
+          console.error('Authentication failed, redirecting to login');
+          navigate('/login');
+          return;
         } else {
           console.error('Failed to fetch roadmap:', response.statusText);
           setRoadmap(null);
