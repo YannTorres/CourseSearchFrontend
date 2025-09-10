@@ -412,7 +412,7 @@ const Roadmaps = () => {
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <span className="flex items-center">
                       <BookOpen className="h-4 w-4 mr-1" />
-                      {roadmap.milestones} milestones
+                      {roadmap.milestones} Cursos
                     </span>
                   </div>
 
