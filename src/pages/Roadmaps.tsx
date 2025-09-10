@@ -25,6 +25,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
+import { useToast } from '@/hooks/use-toast';
 
 interface Roadmap {
   id: string;
@@ -55,6 +56,7 @@ interface RoadmapFormData {
 
 const Roadmaps = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const [roadmaps, setRoadmaps] = useState<Roadmap[]>([]);
 
@@ -106,6 +108,11 @@ const Roadmaps = () => {
         setRoadmaps(convertedRoadmaps);
       } else if (response.status === 401) {
         console.error('Authentication failed, redirecting to login');
+        toast({
+          title: "Sessão expirada",
+          description: "Por favor, faça login novamente para continuar.",
+          variant: "destructive",
+        });
         navigate('/login');
         return;
       }

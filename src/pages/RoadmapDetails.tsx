@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface Course {
   id: string;
@@ -36,6 +37,7 @@ const RoadmapDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useToast();
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -101,6 +103,11 @@ const RoadmapDetails = () => {
           setRoadmap(mappedRoadmap);
         } else if (response.status === 401) {
           console.error('Authentication failed, redirecting to login');
+          toast({
+            title: "Sessão expirada",
+            description: "Por favor, faça login novamente para acessar os detalhes do roadmap.",
+            variant: "destructive",
+          });
           navigate('/login');
           return;
         } else {
