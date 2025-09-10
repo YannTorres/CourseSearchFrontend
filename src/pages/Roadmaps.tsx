@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Map, Clock, Target, ChevronRight } from 'lucide-react';
+import { Plus, Map, Clock, Target, ChevronRight, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -400,7 +400,7 @@ const Roadmaps = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <span className="flex items-center">
-                      <Target className="h-4 w-4 mr-1" />
+                      <BookOpen className="h-4 w-4 mr-1" />
                       {roadmap.milestones} milestones
                     </span>
                   </div>
@@ -408,7 +408,7 @@ const Roadmaps = () => {
                   {/* Progress Bar */}
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">Progress</span>
+                      <span className="text-gray-600 dark:text-gray-400">Progresso</span>
                       <span className="font-medium dark:text-white">{roadmap.progress}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
@@ -421,7 +421,7 @@ const Roadmaps = () => {
 
                   <div className="flex items-center justify-between pt-2">
                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                      Created {new Date(roadmap.createdAt).toLocaleDateString()}
+                      Criado em {new Date(roadmap.createdAt).toLocaleDateString('pt-BR')}
                     </span>
                     <ChevronRight className="h-4 w-4 text-gray-400" />
                   </div>
@@ -434,9 +434,9 @@ const Roadmaps = () => {
         {roadmaps.length === 0 && (
           <div className="text-center py-16">
             <Map className="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sem Roadmaps ainda</h3>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sem Recomendações ainda</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Crie seu primeiro roadmap personalizado para começar sua jornada.
+              Crie uma recomendação personalizado para começar sua jornada.
             </p>
           </div>
         )}

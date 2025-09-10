@@ -16,7 +16,6 @@ interface Course {
   duration: string;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   isCompleted: boolean;
-  lessons: number;
   instructor: string;
 }
 
@@ -79,7 +78,7 @@ const RoadmapDetails = () => {
             difficulty: data.roadmapLevel as 'Beginner' | 'Intermediate' | 'Advanced',
             milestones: data.steps,
             // Static values as requested
-            category: 'Learning Path',
+            category: 'Recomendação',
             estimatedDuration: '4-8 weeks',
             createdAt: '2024-01-01',
             progress: Math.round((data.courses.filter((c: any) => c.isCompleted).length / data.courses.length) * 100),
@@ -92,9 +91,7 @@ const RoadmapDetails = () => {
                 duration: formatDuration(course.durationInMinutes),
                 difficulty: (course.courseLevels[0] || 'Intermediate') as 'Beginner' | 'Intermediate' | 'Advanced',
                 isCompleted: course.isCompleted,
-                // Static values as requested
-                lessons: Math.floor(course.durationInMinutes / 15) || 10,
-                instructor: 'AI Generated'
+                instructor: course.platformName
               }))
           };
           
@@ -146,10 +143,10 @@ const RoadmapDetails = () => {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'Advanced': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+      case 'Iniciante': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 hover:bg-green-100';
+      case 'Intermediário': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 hover:bg-yellow-100';
+      case 'Avançado': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 ';
+      default: return 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-200';
     }
   };
 
@@ -207,20 +204,20 @@ const RoadmapDetails = () => {
             <div className="lg:w-80">
               <Card className="dark:bg-gray-700 dark:border-gray-600">
                 <CardHeader>
-                  <CardTitle className="text-lg dark:text-white">Progress Overview</CardTitle>
+                  <CardTitle className="text-lg dark:text-white">Visão Geral</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-600 dark:text-gray-400">Overall Progress</span>
+                        <span className="text-gray-600 dark:text-gray-400">Progresso geral</span>
                         <span className="font-medium dark:text-white">{roadmap.progress}%</span>
                       </div>
                       <Progress value={roadmap.progress} className="h-2" />
                     </div>
                     <div>
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-600 dark:text-gray-400">Courses Completed</span>
+                        <span className="text-gray-600 dark:text-gray-400">Cursos Completos</span>
                         <span className="font-medium dark:text-white">{completedCourses}/{roadmap.courses.length}</span>
                       </div>
                       <Progress value={(completedCourses / roadmap.courses.length) * 100} className="h-2" />
@@ -234,7 +231,7 @@ const RoadmapDetails = () => {
 
         {/* Courses Section */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Courses</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Cursos</h2>
           
           <div className="space-y-4">
             {roadmap.courses.map((course, index) => (
@@ -259,14 +256,14 @@ const RoadmapDetails = () => {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                              Course {index + 1}
+                              Curso {index + 1}
                             </span>
                             <Badge className={getDifficultyColor(course.difficulty)}>
                               {course.difficulty}
                             </Badge>
                             {course.isCompleted && (
                               <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                Completed
+                                Completo
                               </Badge>
                             )}
                           </div>
@@ -285,10 +282,6 @@ const RoadmapDetails = () => {
                               {course.duration}
                             </span>
                             <span className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-1" />
-                              {course.lessons} lessons
-                            </span>
-                            <span className="flex items-center">
                               <Users className="h-4 w-4 mr-1" />
                               {course.instructor}
                             </span>
@@ -302,7 +295,7 @@ const RoadmapDetails = () => {
                             className="flex items-center gap-2"
                           >
                             <Play className="h-4 w-4" />
-                            {course.isCompleted ? "Review" : "Start Course"}
+                            {course.isCompleted ? "Review" : "Ir para o Curso"}
                           </Button>
                         </div>
                       </div>
