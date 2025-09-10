@@ -70,6 +70,9 @@ const RoadmapDetails = () => {
         if (response.ok) {
           const data = await response.json();
           
+          // Calculate total duration from all courses
+          const totalDurationMinutes = data.courses.reduce((total: number, course: any) => total + course.durationInMinutes, 0);
+          
           // Map API response to component structure
           const mappedRoadmap: Roadmap = {
             id: data.id,
@@ -79,7 +82,7 @@ const RoadmapDetails = () => {
             milestones: data.steps,
             // Static values as requested
             category: 'Recomendação',
-            estimatedDuration: '4-8 weeks',
+            estimatedDuration: formatDuration(totalDurationMinutes),
             createdAt: '2024-01-01',
             progress: Math.round((data.courses.filter((c: any) => c.isCompleted).length / data.courses.length) * 100),
             courses: data.courses
