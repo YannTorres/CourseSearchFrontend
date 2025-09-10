@@ -43,6 +43,7 @@ interface ApiRoadmap {
   title: string;
   description: string;
   stepsCount: number;
+  completedCourses: number;
   createdAt: string;
 }
 
@@ -77,6 +78,10 @@ const Roadmaps = () => {
     const difficulty = apiRoadmap.experienceLevel === 0 ? 'Iniciante' : 
                       apiRoadmap.experienceLevel === 1 ? 'Intermediário' : 'Avançado';
     
+    const progress = apiRoadmap.stepsCount > 0 
+      ? Math.round((apiRoadmap.completedCourses / apiRoadmap.stepsCount) * 100)
+      : 0;
+    
     return {
       id: apiRoadmap.id,
       title: apiRoadmap.title,
@@ -84,7 +89,7 @@ const Roadmaps = () => {
       difficulty,
       milestones: apiRoadmap.stepsCount,
       createdAt: new Date(apiRoadmap.createdAt).toISOString().split('T')[0],
-      progress: 0 
+      progress 
     };
   };
 
