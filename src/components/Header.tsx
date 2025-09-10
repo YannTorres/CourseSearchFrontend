@@ -22,7 +22,7 @@ const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
 
   const getActiveTab = () => {
-    if (location.pathname === '/roadmaps') return 'roadmaps';
+    if (location.pathname.startsWith('/roadmaps')) return 'roadmaps';
     if (location.pathname === '/categories') return 'categories';
     if (location.pathname === '/login') return 'login';
     return 'home';
