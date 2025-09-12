@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Star, Users, Clock, Calendar, Award, ExternalLink, BookOpen, Play, Download } from 'lucide-react';
+import { ArrowLeft, Star, Users, Clock, Calendar, Award, ExternalLink, BookOpen, Play, Download, MessageCircle, ThumbsUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -254,42 +254,258 @@ const CourseDetails = () => {
               </Card>
             )}*/}
 
-            {/* Course Syllabus */}
-            {enrichedCourse.syllabus && (
-              <Card className="dark:bg-gray-800 dark:border-gray-700">
-                <CardHeader>
-                  <CardTitle className="dark:text-white">Conteúdo do Curso</CardTitle>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                    <span>{totalLessons} aulas</span>
-                    <span>•</span>
-                    <span>{completedLessons} concluídas</span>
+            {/* Course Reviews */}
+            <Card className="dark:bg-gray-800 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="dark:text-white">Avaliações dos Alunos</CardTitle>
+                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                    <span className="font-medium text-gray-900 dark:text-white">{enrichedCourse.ratingAverage}</span>
                   </div>
-                  {totalLessons > 0 && (
-                    <Progress value={progressPercentage} className="mt-2" />
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {enrichedCourse.syllabus.map((section, sectionIndex) => (
-                      <div key={sectionIndex}>
-                        <h4 className="font-medium text-gray-900 dark:text-white mb-2">{section.title}</h4>
-                        <div className="space-y-2 ml-4">
-                          {section.lessons.map((lesson, lessonIndex) => (
-                            <div key={lessonIndex} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-                              <div className="flex items-center">
-                                <Play className="h-4 w-4 mr-3 text-blue-500" />
-                                <span className="font-medium text-gray-900 dark:text-white">{lesson.title}</span>
-                              </div>
-                              <span className="text-sm text-gray-500 dark:text-gray-400">{lesson.duration}</span>
-                            </div>
+                  <span>•</span>
+                  <span>{enrichedCourse.ratingCount} avaliações</span>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Review Item 1 */}
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                        <span className="text-sm font-medium text-blue-800 dark:text-blue-200">JS</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="font-medium text-gray-900 dark:text-white">João Silva</h5>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">2 dias atrás</span>
+                        </div>
+                        <div className="flex items-center mb-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
                           ))}
                         </div>
+                        <p className="text-gray-700 dark:text-gray-300 mb-3">
+                          Excelente curso! O conteúdo é muito bem estruturado e as explicações são claras. Recomendo para quem quer aprender de forma prática e eficiente.
+                        </p>
+                        <div className="flex items-center gap-4 text-sm">
+                          <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                            <ThumbsUp className="h-4 w-4" />
+                            <span>24</span>
+                          </button>
+                          <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                            <MessageCircle className="h-4 w-4" />
+                            <span>Responder</span>
+                          </button>
+                        </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            )}
+
+                  {/* Review Item 2 */}
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-900 flex items-center justify-center">
+                        <span className="text-sm font-medium text-pink-800 dark:text-pink-200">MR</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="font-medium text-gray-900 dark:text-white">Maria Rodrigues</h5>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">1 semana atrás</span>
+                        </div>
+                        <div className="flex items-center mb-2">
+                          {[1, 2, 3, 4].map((star) => (
+                            <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
+                          ))}
+                          <Star className="h-4 w-4 text-gray-300 dark:text-gray-600" />
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 mb-3">
+                          Curso muito bom, mas poderia ter mais exercícios práticos. O instrutor explica muito bem e o material é de qualidade.
+                        </p>
+                        <div className="flex items-center gap-4 text-sm">
+                          <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                            <ThumbsUp className="h-4 w-4" />
+                            <span>18</span>
+                          </button>
+                          <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                            <MessageCircle className="h-4 w-4" />
+                            <span>Responder</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Review Item 3 */}
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                        <span className="text-sm font-medium text-green-800 dark:text-green-200">CA</span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="font-medium text-gray-900 dark:text-white">Carlos Almeida</h5>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">2 semanas atrás</span>
+                        </div>
+                        <div className="flex items-center mb-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 mb-3">
+                          Fantástico! Consegui aplicar os conhecimentos no meu trabalho imediatamente. Vale muito a pena o investimento.
+                        </p>
+                        <div className="flex items-center gap-4 text-sm">
+                          <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                            <ThumbsUp className="h-4 w-4" />
+                            <span>32</span>
+                          </button>
+                          <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                            <MessageCircle className="h-4 w-4" />
+                            <span>Responder</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <Button variant="outline" className="w-full">
+                    Ver todas as avaliações
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Related Courses */}
+            <Card className="dark:bg-gray-800 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="dark:text-white">Cursos Relacionados</CardTitle>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Outros cursos que podem interessar você
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  {/* Related Course 1 */}
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600">
+                    <CardContent className="p-4">
+                      <div className="aspect-video bg-gradient-to-br from-blue-400 to-blue-600 rounded-md mb-3 flex items-center justify-center">
+                        <BookOpen className="h-8 w-8 text-white" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        JavaScript Avançado: ES6+
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                        Domine as funcionalidades modernas do JavaScript
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span className="font-medium">4.7</span>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 149,90</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Related Course 2 */}
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600">
+                    <CardContent className="p-4">
+                      <div className="aspect-video bg-gradient-to-br from-green-400 to-green-600 rounded-md mb-3 flex items-center justify-center">
+                        <BookOpen className="h-8 w-8 text-white" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        Node.js e Express
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                        Construa APIs robustas com Node.js
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span className="font-medium">4.9</span>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 199,90</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Related Course 3 */}
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600">
+                    <CardContent className="p-4">
+                      <div className="aspect-video bg-gradient-to-br from-purple-400 to-purple-600 rounded-md mb-3 flex items-center justify-center">
+                        <BookOpen className="h-8 w-8 text-white" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        TypeScript Essencial
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                        Adicione tipagem ao seu JavaScript
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span className="font-medium">4.8</span>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 179,90</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Related Course 4 */}
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600">
+                    <CardContent className="p-4">
+                      <div className="aspect-video bg-gradient-to-br from-red-400 to-red-600 rounded-md mb-3 flex items-center justify-center">
+                        <BookOpen className="h-8 w-8 text-white" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        Vue.js Completo
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                        Framework progressivo para interfaces
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span className="font-medium">4.6</span>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 169,90</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Related Course 5 */}
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600 md:col-span-2 lg:col-span-1 xl:col-span-2">
+                    <CardContent className="p-4">
+                      <div className="aspect-video bg-gradient-to-br from-orange-400 to-orange-600 rounded-md mb-3 flex items-center justify-center">
+                        <BookOpen className="h-8 w-8 text-white" />
+                      </div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        React Native: Apps Mobile
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
+                        Desenvolva apps nativos com React
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-sm">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span className="font-medium">4.7</span>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 249,90</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <Button variant="outline" className="w-full" onClick={() => navigate('/courses')}>
+                    Ver mais cursos relacionados
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Sidebar */}
