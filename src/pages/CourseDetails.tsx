@@ -382,6 +382,65 @@ const CourseDetails = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Enrollment Card */}
+            <Card className="dark:bg-gray-800 dark:border-gray-700 sticky top-4">
+              <CardContent className="p-6">
+                <div className="text-center mb-6">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    {enrichedCourse.platform?.toLowerCase() === 'alura' ? 'R$ 85,02' : 
+                     enrichedCourse.platform?.toLowerCase() === 'microsoft learn' ? 'Gratuito' : 
+                     (enrichedCourse.price || 'Consulte a plataforma')}
+                  </div>
+                  {enrichedCourse.platform?.toLowerCase() === 'alura' && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">em 12x</p>
+                  )}
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {enrichedCourse.platform?.toLowerCase() === 'alura' ? 'Acesso a um ano em todos os cursos da plataforma' :
+                     enrichedCourse.platform?.toLowerCase() === 'microsoft learn' ? 'Acesso gratuito ao conteúdo' :
+                     'Acesso completo ao curso'}
+                  </p>
+                </div>
+
+                <Button 
+                  className="w-full mb-4" 
+                  size="lg"
+                  onClick={() => window.open(enrichedCourse.platformUrl, '_blank')}
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Acessar Curso na Plataforma
+                </Button>
+
+                <Separator className="my-4" />
+
+                <div className="space-y-3 text-sm">
+                  {enrichedCourse.instructor && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
+                      <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
+                    </div>
+                  )}
+                  {enrichedCourse.durationInMinutes && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Duração:</span>
+                      <span className="font-medium dark:text-white">
+                        {Math.floor(enrichedCourse.durationInMinutes / 60)}h {enrichedCourse.durationInMinutes % 60}min
+                      </span>
+                    </div>
+                  )}
+                  {enrichedCourse.courseLevels && enrichedCourse.courseLevels.length > 0 && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Nível:</span>
+                      <span className="font-medium dark:text-white">{enrichedCourse.courseLevels.join(', ')}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
+                    <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Related Courses */}
             <Card className="dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
@@ -484,56 +543,6 @@ const CourseDetails = () => {
                   <Button variant="outline" size="sm" className="w-full text-xs" onClick={() => navigate('/courses')}>
                     Ver mais cursos
                   </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Enrollment Card */}
-            <Card className="dark:bg-gray-800 dark:border-gray-700 sticky top-4">
-              <CardContent className="p-6">
-                <div className="text-center mb-6">
-                  <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    {enrichedCourse.price || 'Consulte a plataforma'}
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Acesso completo ao curso</p>
-                </div>
-
-                <Button 
-                  className="w-full mb-4" 
-                  size="lg"
-                  onClick={() => window.open(enrichedCourse.platformUrl, '_blank')}
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Acessar Curso na Plataforma
-                </Button>
-
-                <Separator className="my-4" />
-
-                <div className="space-y-3 text-sm">
-                  {enrichedCourse.instructor && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
-                      <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
-                    </div>
-                  )}
-                  {enrichedCourse.durationInMinutes && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Duração:</span>
-                      <span className="font-medium dark:text-white">
-                        {Math.floor(enrichedCourse.durationInMinutes / 60)}h {enrichedCourse.durationInMinutes % 60}min
-                      </span>
-                    </div>
-                  )}
-                  {enrichedCourse.courseLevels && enrichedCourse.courseLevels.length > 0 && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Nível:</span>
-                      <span className="font-medium dark:text-white">{enrichedCourse.courseLevels.join(', ')}</span>
-                    </div>
-                  )}
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
-                    <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
-                  </div>
                 </div>
               </CardContent>
             </Card>
