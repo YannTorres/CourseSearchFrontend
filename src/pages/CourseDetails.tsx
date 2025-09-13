@@ -179,9 +179,9 @@ const CourseDetails = () => {
           Voltar aos Cursos
         </Button>
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid gap-8 lg:grid-cols-4">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             {/* Course Header */}
             <Card className="dark:bg-gray-800 dark:border-gray-700">
               <CardContent className="p-6">
@@ -378,177 +378,116 @@ const CourseDetails = () => {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Related Courses */}
-            <Card className="dark:bg-gray-800 dark:border-gray-700">
-              <CardHeader>
-                <CardTitle className="dark:text-white">Cursos Relacionados</CardTitle>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Outros cursos que podem interessar você
-                </p>
-              </CardHeader>
-              <CardContent>
-                <Carousel className="w-full">
-                  <CarouselContent>
-                    {/* Related Course 1 */}
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/2">
-                      <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600 hover-scale">
-                        <CardContent className="p-4">
-                          <div className="aspect-video bg-gradient-to-br from-blue-400 to-blue-600 rounded-md mb-3 flex items-center justify-center">
-                            <BookOpen className="h-8 w-8 text-white" />
-                          </div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                            JavaScript Avançado: ES6+
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                            Domine as funcionalidades modernas do JavaScript
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-sm">
-                              <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                              <span className="font-medium">4.7</span>
-                            </div>
-                            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 149,90</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-
-                    {/* Related Course 2 */}
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/2">
-                      <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600 hover-scale">
-                        <CardContent className="p-4">
-                          <div className="aspect-video bg-gradient-to-br from-green-400 to-green-600 rounded-md mb-3 flex items-center justify-center">
-                            <BookOpen className="h-8 w-8 text-white" />
-                          </div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                            Node.js e Express
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                            Construa APIs robustas com Node.js
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-sm">
-                              <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                              <span className="font-medium">4.9</span>
-                            </div>
-                            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 199,90</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-
-                    {/* Related Course 3 */}
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/2">
-                      <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600 hover-scale">
-                        <CardContent className="p-4">
-                          <div className="aspect-video bg-gradient-to-br from-purple-400 to-purple-600 rounded-md mb-3 flex items-center justify-center">
-                            <BookOpen className="h-8 w-8 text-white" />
-                          </div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                            TypeScript Essencial
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                            Adicione tipagem ao seu JavaScript
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-sm">
-                              <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                              <span className="font-medium">4.8</span>
-                            </div>
-                            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 179,90</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-
-                    {/* Related Course 4 */}
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/2">
-                      <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600 hover-scale">
-                        <CardContent className="p-4">
-                          <div className="aspect-video bg-gradient-to-br from-red-400 to-red-600 rounded-md mb-3 flex items-center justify-center">
-                            <BookOpen className="h-8 w-8 text-white" />
-                          </div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                            Vue.js Completo
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                            Framework progressivo para interfaces
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-sm">
-                              <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                              <span className="font-medium">4.6</span>
-                            </div>
-                            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 169,90</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-
-                    {/* Related Course 5 */}
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/2">
-                      <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600 hover-scale">
-                        <CardContent className="p-4">
-                          <div className="aspect-video bg-gradient-to-br from-orange-400 to-orange-600 rounded-md mb-3 flex items-center justify-center">
-                            <BookOpen className="h-8 w-8 text-white" />
-                          </div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                            React Native: Apps Mobile
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                            Desenvolva apps nativos com React
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-sm">
-                              <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                              <span className="font-medium">4.7</span>
-                            </div>
-                            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 249,90</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-
-                    {/* Related Course 6 */}
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/2">
-                      <Card className="cursor-pointer hover:shadow-md transition-shadow dark:bg-gray-700 dark:border-gray-600 hover-scale">
-                        <CardContent className="p-4">
-                          <div className="aspect-video bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-md mb-3 flex items-center justify-center">
-                            <BookOpen className="h-8 w-8 text-white" />
-                          </div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                            Angular Framework
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                            Crie aplicações robustas com Angular
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center text-sm">
-                              <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                              <span className="font-medium">4.5</span>
-                            </div>
-                            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">R$ 189,90</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-                
-                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <Button variant="outline" className="w-full" onClick={() => navigate('/courses')}>
-                    Ver mais cursos relacionados
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Related Courses */}
+            <Card className="dark:bg-gray-800 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="dark:text-white text-lg">Cursos Relacionados</CardTitle>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  {/* Related Course 1 */}
+                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                    <div className="w-20 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
+                        JavaScript Avançado: ES6+
+                      </h5>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span>4.7</span>
+                        </div>
+                        <span>•</span>
+                        <span>R$ 149,90</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Related Course 2 */}
+                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                    <div className="w-20 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
+                        Node.js e Express
+                      </h5>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span>4.9</span>
+                        </div>
+                        <span>•</span>
+                        <span>R$ 199,90</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Related Course 3 */}
+                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                    <div className="w-20 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
+                        TypeScript Essencial
+                      </h5>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span>4.8</span>
+                        </div>
+                        <span>•</span>
+                        <span>R$ 179,90</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Related Course 4 */}
+                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                    <div className="w-20 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
+                        Vue.js Completo
+                      </h5>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span>4.6</span>
+                        </div>
+                        <span>•</span>
+                        <span>R$ 169,90</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Related Course 5 */}
+                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
+                    <div className="w-20 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
+                        React Native: Apps Mobile
+                      </h5>
+                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center">
+                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                          <span>4.7</span>
+                        </div>
+                        <span>•</span>
+                        <span>R$ 249,90</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <Button variant="outline" size="sm" className="w-full text-xs" onClick={() => navigate('/courses')}>
+                    Ver mais cursos
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Enrollment Card */}
             <Card className="dark:bg-gray-800 dark:border-gray-700 sticky top-4">
               <CardContent className="p-6">
