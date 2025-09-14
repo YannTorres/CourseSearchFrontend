@@ -34,10 +34,14 @@ const AddReviewModal = ({ courseId, onReviewAdded }: AddReviewModalProps) => {
     setIsSubmitting(true);
     
     try {
+      // Get token from localStorage (temporary solution)
+      const token = localStorage.getItem('authToken');
+      
       const response = await fetch(`http://localhost:7236/api/rating/${courseId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
         },
         body: JSON.stringify({
           rating,
