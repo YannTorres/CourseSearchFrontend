@@ -31,15 +31,6 @@ const AddReviewModal = ({ courseId, onReviewAdded }: AddReviewModalProps) => {
       return;
     }
 
-    if (!review.trim()) {
-      toast({
-        title: "Erro", 
-        description: "Por favor, escreva um comentário sobre o curso.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setIsSubmitting(true);
     
     try {
@@ -50,7 +41,7 @@ const AddReviewModal = ({ courseId, onReviewAdded }: AddReviewModalProps) => {
         },
         body: JSON.stringify({
           rating,
-          review: review.trim()
+          review: review.trim() || null
         }),
       });
 
