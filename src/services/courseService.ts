@@ -1,4 +1,4 @@
-import { CourseResponse, CourseFilters, Course } from '@/types/course';
+import { CourseResponse, CourseFilters, Course, CourseReview } from '@/types/course';
 
 const API_BASE_URL = 'https://localhost:7236/api';
 
@@ -36,6 +36,16 @@ export const courseService = {
     
     if (!response.ok) {
       throw new Error('Failed to fetch course');
+    }
+    
+    return response.json();
+  },
+
+  async getCourseReviews(courseId: string): Promise<CourseReview[]> {
+    const response = await fetch(`${API_BASE_URL}/course/${courseId}/reviews`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch course reviews');
     }
     
     return response.json();

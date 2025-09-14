@@ -51,3 +51,10 @@ export interface CourseFilters {
   sortby?: string;
   sortOrder?: string;
 }
+
+export interface CourseReview {
+  rating: number;
+  review: string;
+  userName: string;
+  updateAt: string;
+}

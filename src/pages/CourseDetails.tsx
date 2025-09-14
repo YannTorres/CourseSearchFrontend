@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Header from '@/components/Header';
 import { courseService } from '@/services/courseService';
-import { Course } from '@/types/course';
+import { Course, CourseReview } from '@/types/course';
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -18,6 +18,12 @@ const CourseDetails = () => {
   const { data: course, isLoading, error } = useQuery({
     queryKey: ['course', id],
     queryFn: () => courseService.getCourseById(id!),
+    enabled: !!id,
+  });
+
+  const { data: reviews, isLoading: reviewsLoading } = useQuery({
+    queryKey: ['courseReviews', id],
+    queryFn: () => courseService.getCourseReviews(id!),
     enabled: !!id,
   });
 
@@ -171,78 +177,75 @@ const CourseDetails = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  {/* Review Item 1 */}
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                        <span className="text-sm font-medium text-blue-800 dark:text-blue-200">JS</span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="font-medium text-gray-900 dark:text-white">João Silva</h5>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">2 dias atrás</span>
+                {reviewsLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="animate-pulse flex space-x-4">
+                        <div className="rounded-full bg-gray-300 h-10 w-10"></div>
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+                          <div className="h-4 bg-gray-300 rounded w-full"></div>
                         </div>
-                        <div className="flex items-center mb-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                        <p className="text-gray-700 dark:text-gray-300 mb-3">
-                          Excelente curso! O conteúdo é muito bem estruturado e as explicações são claras. Recomendo para quem quer aprender de forma prática e eficiente.
-                        </p>
-                       
                       </div>
-                    </div>
+                    ))}
                   </div>
+                ) : reviews && reviews.length > 0 ? (
+                  <div className="space-y-6">
+                    {reviews.map((review, index) => {
+                      const initials = review.userName
+                        .split(' ')
+                        .map(name => name.charAt(0))
+                        .join('')
+                        .toUpperCase();
+                      
+                      const colors = [
+                        'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+                        'bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200',
+                        'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+                        'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
+                        'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200'
+                      ];
+                      const colorClass = colors[index % colors.length];
 
-                  {/* Review Item 2 */}
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-900 flex items-center justify-center">
-                        <span className="text-sm font-medium text-pink-800 dark:text-pink-200">MR</span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="font-medium text-gray-900 dark:text-white">Maria Rodrigues</h5>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">1 semana atrás</span>
+                      return (
+                        <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0">
+                          <div className="flex items-start gap-4">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${colorClass}`}>
+                              <span className="text-sm font-medium">{initials}</span>
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between mb-2">
+                                <h5 className="font-medium text-gray-900 dark:text-white">{review.userName}</h5>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  {new Date(review.updateAt).toLocaleDateString('pt-BR')}
+                                </span>
+                              </div>
+                              <div className="flex items-center mb-2">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star 
+                                    key={star} 
+                                    className={`h-4 w-4 ${
+                                      star <= review.rating 
+                                        ? 'text-yellow-400 fill-current' 
+                                        : 'text-gray-300 dark:text-gray-600'
+                                    }`} 
+                                  />
+                                ))}
+                              </div>
+                              <p className="text-gray-700 dark:text-gray-300">
+                                {review.review}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center mb-2">
-                          {[1, 2, 3, 4].map((star) => (
-                            <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
-                          ))}
-                          <Star className="h-4 w-4 text-gray-300 dark:text-gray-600" />
-                        </div>
-                        <p className="text-gray-700 dark:text-gray-300 mb-3">
-                          Curso muito bom, mas poderia ter mais exercícios práticos. O instrutor explica muito bem e o material é de qualidade.
-                        </p>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
-
-                  {/* Review Item 3 */}
-                  <div className="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-b-0">
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                        <span className="text-sm font-medium text-green-800 dark:text-green-200">CA</span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="font-medium text-gray-900 dark:text-white">Carlos Almeida</h5>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">2 semanas atrás</span>
-                        </div>
-                        <div className="flex items-center mb-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star key={star} className="h-4 w-4 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                        <p className="text-gray-700 dark:text-gray-300 mb-3">
-                          Fantástico! Consegui aplicar os conhecimentos no meu trabalho imediatamente. Vale muito a pena o investimento.
-                        </p>                  
-                      </div>
-                    </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500 dark:text-gray-400">Ainda não há avaliações para este curso.</p>
                   </div>
-                </div>
+                )}
                 
                 <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <Button variant="outline" className="w-full">
