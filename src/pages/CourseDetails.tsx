@@ -247,11 +247,6 @@ const CourseDetails = () => {
                   </div>
                 )}
                 
-                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <Button variant="outline" className="w-full">
-                    Ver todas as avaliações
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </div>
