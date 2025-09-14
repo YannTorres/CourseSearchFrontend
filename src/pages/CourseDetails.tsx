@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Star, Users, Clock, Calendar, Award, ExternalLink, BookOpen, Play, Download, MessageCircle, ThumbsUp } from 'lucide-react';
+import { ArrowLeft, Star, Users, Clock, Calendar, Award, ExternalLink, BookOpen, Play, Download, MessageCircle, ThumbsUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -8,12 +8,16 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Header from '@/components/Header';
+import AddReviewModal from '@/components/AddReviewModal';
 import { courseService } from '@/services/courseService';
 import { Course, CourseReview } from '@/types/course';
+import { useState } from 'react';
 
 const CourseDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 3;
   
   const { data: course, isLoading, error } = useQuery({
     queryKey: ['course', id],
@@ -21,11 +25,23 @@ const CourseDetails = () => {
     enabled: !!id,
   });
 
-  const { data: reviews, isLoading: reviewsLoading } = useQuery({
+  const { data: reviews, isLoading: reviewsLoading, refetch: refetchReviews } = useQuery({
     queryKey: ['courseReviews', id],
     queryFn: () => courseService.getCourseReviews(id!),
     enabled: !!id,
   });
+
+  const handleReviewAdded = () => {
+    refetchReviews();
+    setCurrentPage(1); // Reset to first page when new review is added
+  };
+
+  // Pagination logic
+  const totalReviews = reviews?.length || 0;
+  const totalPages = Math.ceil(totalReviews / reviewsPerPage);
+  const startIndex = (currentPage - 1) * reviewsPerPage;
+  const endIndex = startIndex + reviewsPerPage;
+  const currentReviews = reviews?.slice(startIndex, endIndex) || [];
 
   // Add default frontend properties if missing from API
   const enrichedCourse: Course | undefined = course ? {
@@ -166,14 +182,19 @@ const CourseDetails = () => {
             {/* Course Reviews */}
             <Card className="dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
-                <CardTitle className="dark:text-white">Avaliações dos Alunos</CardTitle>
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                    <span className="font-medium text-gray-900 dark:text-white">{enrichedCourse.ratingAverage}</span>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="dark:text-white">Avaliações dos Alunos</CardTitle>
+                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mt-2">
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                        <span className="font-medium text-gray-900 dark:text-white">{enrichedCourse.ratingAverage}</span>
+                      </div>
+                      <span>•</span>
+                      <span>{totalReviews} avaliações</span>
+                    </div>
                   </div>
-                  <span>•</span>
-                  <span>{enrichedCourse.ratingCount}</span>
+                  <AddReviewModal courseId={id!} onReviewAdded={handleReviewAdded} />
                 </div>
               </CardHeader>
               <CardContent>
@@ -190,8 +211,9 @@ const CourseDetails = () => {
                     ))}
                   </div>
                 ) : reviews && reviews.length > 0 ? (
-                  <div className="space-y-6">
-                    {reviews.map((review, index) => {
+                  <>
+                    <div className="space-y-6">
+                      {currentReviews.map((review, index) => {
                       const initials = review.userName
                         .split(' ')
                         .map(name => name.charAt(0))
@@ -238,9 +260,40 @@ const CourseDetails = () => {
                             </div>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                      <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          Mostrando {startIndex + 1}-{Math.min(endIndex, totalReviews)} de {totalReviews} avaliações
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </Button>
+                          <span className="text-sm text-gray-700 dark:text-gray-300 px-2">
+                            {currentPage} de {totalPages}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-gray-500 dark:text-gray-400">Ainda não há avaliações para este curso.</p>
