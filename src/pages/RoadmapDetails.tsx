@@ -210,10 +210,10 @@ const RoadmapDetails = () => {
         <Header />
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Roadmap not found</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Recomendação não encontrada</h1>
             <Button onClick={() => navigate('/roadmaps')} className="mt-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Roadmaps
+              Voltar para o ínicio
             </Button>
           </div>
         </div>
@@ -244,7 +244,7 @@ const RoadmapDetails = () => {
           className="mb-6"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Roadmaps
+          Voltar para o ínicio
         </Button>
 
         {/* Roadmap Header */}
