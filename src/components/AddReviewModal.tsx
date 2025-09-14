@@ -43,14 +43,12 @@ const AddReviewModal = ({ courseId, onReviewAdded }: AddReviewModalProps) => {
     setIsSubmitting(true);
     
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-      const response = await fetch(`${API_BASE_URL}/rating`, {
+      const response = await fetch(`http://localhost:7236/api/rating/${courseId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          courseId,
           rating,
           review: review.trim()
         }),
@@ -83,7 +81,7 @@ const AddReviewModal = ({ courseId, onReviewAdded }: AddReviewModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button size="sm" >
           Avaliar Curso
         </Button>
       </DialogTrigger>
