@@ -16,9 +16,9 @@ const Courses = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [sortBy, setSortBy] = useState('title');
-  const [sortOrder, setSortOrder] = useState('desc');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'rating');
+  const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'desc');
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [courseData, setCourseData] = useState<CourseResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -47,10 +47,15 @@ const Courses = () => {
   };
 
   useEffect(() => {
-    const query = searchParams.get('q');
-    if (query) {
-      setSearchQuery(query);
-    }
+    const query = searchParams.get('q') || '';
+    const sort = searchParams.get('sortBy') || 'rating';
+    const order = searchParams.get('sortOrder') || 'desc';
+    const page = parseInt(searchParams.get('page') || '1');
+    
+    setSearchQuery(query);
+    setSortBy(sort);
+    setSortOrder(order);
+    setCurrentPage(page);
   }, [searchParams]);
 
   useEffect(() => {
@@ -61,10 +66,31 @@ const Courses = () => {
     return true;
   }) : [];
 
+  const updateSearchParams = (updates: Record<string, string | number>) => {
+    const params = new URLSearchParams(searchParams);
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value !== undefined && value !== '' && value !== 1 && value !== 'rating' && value !== 'desc') {
+        params.set(key, String(value));
+      } else if (key === 'q' && value === '') {
+        params.delete(key);
+      } else if (key !== 'q') {
+        // Keep default values in URL for consistency
+        params.set(key, String(value));
+      }
+    });
+    
+    setSearchParams(params);
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentPage(1);
-    setSearchParams(searchQuery.trim() ? { q: searchQuery } : {});
+    updateSearchParams({ 
+      q: searchQuery.trim(), 
+      page: 1, 
+      sortBy, 
+      sortOrder 
+    });
   };
 
   const getLevelColor = (level: string) => {
@@ -120,7 +146,10 @@ const Courses = () => {
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filtros:</span>
             </div>        
 
-            <Select value={sortBy} onValueChange={setSortBy}>
+            <Select value={sortBy} onValueChange={(value) => {
+              setSortBy(value);
+              updateSearchParams({ q: searchQuery.trim(), sortBy: value, sortOrder, page: 1 });
+            }}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
@@ -131,7 +160,10 @@ const Courses = () => {
               </SelectContent>
             </Select>
 
-            <Select value={sortOrder} onValueChange={setSortOrder}>
+            <Select value={sortOrder} onValueChange={(value) => {
+              setSortOrder(value);
+              updateSearchParams({ q: searchQuery.trim(), sortBy, sortOrder: value, page: 1 });
+            }}>
               <SelectTrigger className="w-32">
                 <SelectValue placeholder="Ordem" />
               </SelectTrigger>
@@ -231,7 +263,11 @@ const Courses = () => {
               <div className="flex justify-center mt-8 gap-2">
                 <button
                   className="px-3 py-1 rounded-md border text-sm font-medium disabled:opacity-50"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  onClick={() => {
+                    const newPage = Math.max(1, currentPage - 1);
+                    setCurrentPage(newPage);
+                    updateSearchParams({ q: searchQuery.trim(), sortBy, sortOrder, page: newPage });
+                  }}
                   disabled={!courseData.hasPreviousPage}
                 >
                   Anterior
@@ -243,7 +279,11 @@ const Courses = () => {
                 )}
                 <button
                   className="px-3 py-1 rounded-md border text-sm font-medium disabled:opacity-50"
-                  onClick={() => setCurrentPage((p) => Math.min(courseData.totalPages, p + 1))}
+                  onClick={() => {
+                    const newPage = Math.min(courseData.totalPages, currentPage + 1);
+                    setCurrentPage(newPage);
+                    updateSearchParams({ q: searchQuery.trim(), sortBy, sortOrder, page: newPage });
+                  }}
                   disabled={!courseData.hasNextPage}
                 >
                   Próxima
