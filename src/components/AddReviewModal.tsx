@@ -34,7 +34,6 @@ const AddReviewModal = ({ courseId, onReviewAdded }: AddReviewModalProps) => {
     setIsSubmitting(true);
     
     try {
-      // Get token from localStorage (temporary solution)
       const token = localStorage.getItem('authToken');
       
       const response = await fetch(`https://localhost:7236/api/rating/${courseId}`, {

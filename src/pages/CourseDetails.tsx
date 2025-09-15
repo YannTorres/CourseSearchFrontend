@@ -191,7 +191,7 @@ const CourseDetails = () => {
                         <span className="font-medium text-gray-900 dark:text-white">{enrichedCourse.ratingAverage}</span>
                       </div>
                       <span>•</span>
-                      <span>{totalReviews} avaliações</span>
+                      <span>{enrichedCourse.ratingCount}</span>
                     </div>
                   </div>
                   <AddReviewModal courseId={id!} onReviewAdded={handleReviewAdded} />
@@ -357,10 +357,6 @@ const CourseDetails = () => {
                       <span className="font-medium dark:text-white">{enrichedCourse.courseLevels.join(', ')}</span>
                     </div>
                   )}
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Plataforma:</span>
-                    <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
-                  </div>
                 </div>
               </CardContent>
             </Card>
