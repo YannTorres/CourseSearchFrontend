@@ -10,7 +10,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Header from '@/components/Header';
 import AddReviewModal from '@/components/AddReviewModal';
 import { courseService } from '@/services/courseService';
-import { Course, CourseReview } from '@/types/course';
+import { Course, CourseReview, SimilarCourse } from '@/types/course';
 import { useState } from 'react';
 
 const CourseDetails = () => {
@@ -28,6 +28,12 @@ const CourseDetails = () => {
   const { data: reviews, isLoading: reviewsLoading, refetch: refetchReviews } = useQuery({
     queryKey: ['courseReviews', id],
     queryFn: () => courseService.getCourseReviews(id!),
+    enabled: !!id,
+  });
+
+  const { data: similarCoursesData, isLoading: similarCoursesLoading } = useQuery({
+    queryKey: ['similarCourses', id],
+    queryFn: () => courseService.getSimilarCourses(id!),
     enabled: !!id,
   });
 
@@ -367,102 +373,60 @@ const CourseDetails = () => {
                 <CardTitle className="dark:text-white text-lg">Cursos Relacionados</CardTitle>
               </CardHeader>
               <CardContent className="p-4">
-                <div className="space-y-3">
-                  {/* Related Course 1 */}
-                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                    <div className="w-20 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
-                        JavaScript Avançado: ES6+
-                      </h5>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                          <span className="text-gray-900 dark:text-white font-medium">{enrichedCourse.ratingAverage}</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                            ({enrichedCourse.ratingCount})
-                          </span>
+                {similarCoursesLoading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="animate-pulse flex gap-3 p-2">
+                        <div className="w-20 h-12 bg-gray-300 dark:bg-gray-600 rounded flex-shrink-0"></div>
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
+                          <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-
-                  {/* Related Course 2 */}
-                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                    <div className="w-20 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
-                        Node.js e Express
-                      </h5>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                          <span className="text-gray-900 dark:text-white font-medium">{enrichedCourse.ratingAverage}</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                            ({enrichedCourse.ratingCount})
-                          </span>
+                ) : similarCoursesData?.similarCourses && similarCoursesData.similarCourses.length > 0 ? (
+                  <div className="space-y-3">
+                    {similarCoursesData.similarCourses.map((course, index) => {
+                      const gradients = [
+                        'from-blue-400 to-blue-600',
+                        'from-green-400 to-green-600',
+                        'from-purple-400 to-purple-600',
+                        'from-red-400 to-red-600',
+                        'from-orange-400 to-orange-600'
+                      ];
+                      const gradientClass = gradients[index % gradients.length];
+                      
+                      return (
+                        <div 
+                          key={course.id}
+                          className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors"
+                          onClick={() => navigate(`/courses/${course.id}`)}
+                        >
+                          <div className={`w-20 h-12 bg-gradient-to-br ${gradientClass} rounded flex-shrink-0`}></div>
+                          <div className="flex-1 min-w-0">
+                            <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
+                              {course.title}
+                            </h5>
+                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                              <div className="flex items-center">
+                                <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
+                                <span className="text-gray-900 dark:text-white font-medium">{course.ratingAverage}</span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                                  ({course.ratingCount})
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
-
-                  {/* Related Course 3 */}
-                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                    <div className="w-20 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
-                        TypeScript Essencial
-                      </h5>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                          <span className="text-gray-900 dark:text-white font-medium">{enrichedCourse.ratingAverage}</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                            ({enrichedCourse.ratingCount})
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">Nenhum curso relacionado encontrado.</p>
                   </div>
-
-                  {/* Related Course 4 */}
-                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                    <div className="w-20 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
-                        Vue.js Completo
-                      </h5>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                          <span className="text-gray-900 dark:text-white font-medium">{enrichedCourse.ratingAverage}</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                            ({enrichedCourse.ratingCount})
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Related Course 5 */}
-                  <div className="flex gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors">
-                    <div className="w-20 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2 mb-1">
-                        React Native: Apps Mobile
-                      </h5>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center">
-                          <Star className="h-3 w-3 text-yellow-400 fill-current mr-1" />
-                          <span className="text-gray-900 dark:text-white font-medium">{enrichedCourse.ratingAverage}</span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                            ({enrichedCourse.ratingCount})
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                )}
                 
               </CardContent>
             </Card>

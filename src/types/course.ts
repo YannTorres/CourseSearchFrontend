@@ -58,3 +58,14 @@ export interface CourseReview {
   userName: string;
   updateAt: string;
 }
+
+export interface SimilarCourse {
+  id: string;
+  title: string;
+  ratingAverage: string;
+  ratingCount: string;
+}
+
+export interface SimilarCoursesResponse {
+  similarCourses: SimilarCourse[];
+}
