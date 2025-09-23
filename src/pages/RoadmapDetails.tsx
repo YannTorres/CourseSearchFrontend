@@ -375,6 +375,7 @@ const RoadmapDetails = () => {
                           <Button 
                             variant={course.isCompleted ? "outline" : "default"}
                             className="flex items-center gap-2"
+                            onClick={() => navigate(`/courses/${course.id}`)}
                           >
                             {course.isCompleted ? <Star className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                             {course.isCompleted ? "Avaliar" : "Ir para o Curso"}
