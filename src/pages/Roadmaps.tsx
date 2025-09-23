@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Map, Clock, Target, ChevronRight, BookOpen } from 'lucide-react';
+import { Plus, Map, Clock, Target, ChevronRight, BookOpen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -171,6 +171,51 @@ const Roadmaps = () => {
 
   const handleRoadmapClick = (roadmapId: string) => {
     navigate(`/roadmaps/${roadmapId}`);
+  };
+
+  const handleDeleteRoadmap = async (roadmapId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent navigation when clicking delete
+    
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      const response = await fetch(`https://localhost:7236/api/roadmap/${roadmapId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 204) {
+        // Successfully deleted
+        toast({
+          title: "Recomendação removida",
+          description: "A recomendação foi removida com sucesso.",
+        });
+        await fetchRoadmaps(); // Refresh the list
+      } else if (response.status === 404) {
+        toast({
+          title: "Recomendação não encontrada",
+          description: "A recomendação que você tentou remover não foi encontrada.",
+          variant: "destructive",
+        });
+      } else if (response.status === 401) {
+        toast({
+          title: "Sessão expirada",
+          description: "Por favor, faça login novamente para continuar.",
+          variant: "destructive",
+        });
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Error deleting roadmap:', error);
+      toast({
+        title: "Erro ao remover",
+        description: "Ocorreu um erro ao tentar remover a recomendação.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -403,6 +448,14 @@ const Roadmaps = () => {
                   <Badge className={`text-xs ${getDifficultyColor(roadmap.difficulty)}`}>
                     {roadmap.difficulty}
                   </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    onClick={(e) => handleDeleteRoadmap(roadmap.id, e)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
                 <CardTitle className="text-xl font-bold text-gray-900 dark:text-white line-clamp-2">
                   {roadmap.title}
