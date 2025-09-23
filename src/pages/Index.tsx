@@ -24,7 +24,7 @@ const Index = () => {
       <Header />
       
       {/* Header */}
-      <div className="py-20">
+      <div className="py-40">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-12 animate-fade-in">
             <h1 className="text-6xl font-bold text-gray-900 dark:text-white mb-4">
@@ -58,7 +58,7 @@ const Index = () => {
           </form>
         </div>
       </div>
-
+      {/* 
       <div className="max-w-6xl mx-auto px-4 pb-16">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Categorias Populares</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -76,6 +76,7 @@ const Index = () => {
           ))}
         </div>
       </div>
+      */}
     </div>
   );
 };

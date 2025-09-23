@@ -145,13 +145,13 @@ const Roadmaps = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Roadmap created:', result);
+        console.log('Recomendação created:', result);
         
         await fetchRoadmaps();
         setIsDialogOpen(false);
         form.reset();
       } else {
-        console.error('Failed to create roadmap');
+        console.error('Falha para criar Recomendação');
       }
     } catch (error) {
       console.error('Error creating roadmap:', error);
@@ -227,7 +227,7 @@ const Roadmaps = () => {
                         <FormLabel>Descrição</FormLabel>
                         <FormControl>
                           <Textarea 
-                            placeholder="Descreva brevemente o objetivo desse Roadmap..."
+                            placeholder="Descreva brevemente o objetivo dessa recomendação..."
                             {...field}
                           />
                         </FormControl>
@@ -354,7 +354,7 @@ const Roadmaps = () => {
               <div className="flex items-center">
                 <Map className="h-8 w-8 text-blue-600 mr-3" />
                 <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Roadmaps Totais</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Recomendações Totais</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">{roadmaps.length}</p>
                 </div>
               </div>

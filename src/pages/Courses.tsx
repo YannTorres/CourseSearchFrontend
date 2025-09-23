@@ -96,15 +96,15 @@ const Courses = () => {
   const getLevelColor = (level: string) => {
     const lowerLevel = level.toLowerCase();
     if (lowerLevel.includes('beginner') || lowerLevel.includes('iniciante')) {
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 hover:bg-green-100';
     }
     if (lowerLevel.includes('intermediate') || lowerLevel.includes('intermediário')) {
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 hover:bg-yellow-100';
     }
     if (lowerLevel.includes('advanced') || lowerLevel.includes('avançado')) {
-      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 hover:bg-red-100';
     }
-    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-100';
   };
 
   return (
@@ -274,7 +274,7 @@ const Courses = () => {
                 </button>
                 {courseData && (
                   <span className="font-medium text-sm items-center mt-1">
-                    (Página {courseData.pageNumber} de {courseData.totalPages})
+                    Página {courseData.pageNumber} de {courseData.totalPages}
                   </span>
                 )}
                 <button
