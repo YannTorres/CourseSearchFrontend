@@ -1,6 +1,6 @@
 import { CourseResponse, CourseFilters, Course, CourseReview, SimilarCoursesResponse } from '@/types/course';
 
-const API_BASE_URL = 'https://apicoursesearch.azurewebsites.net/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const courseService = {
   async getCourses(filters: CourseFilters = {}): Promise<CourseResponse> {

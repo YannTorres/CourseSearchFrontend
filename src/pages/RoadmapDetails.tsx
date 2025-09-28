@@ -62,7 +62,7 @@ const RoadmapDetails = () => {
     try {
       const token = localStorage.getItem('authToken');
       
-      const response = await fetch(`https://apicoursesearch.azurewebsites.net/api/roadmap/${id}/course/${courseId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/roadmap/${id}/course/${courseId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -127,7 +127,7 @@ const RoadmapDetails = () => {
         setIsLoading(true);
         const token = localStorage.getItem('authToken');
         
-        const response = await fetch(`https://apicoursesearch.azurewebsites.net/api/roadmap/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/roadmap/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

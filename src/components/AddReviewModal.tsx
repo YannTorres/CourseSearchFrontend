@@ -36,7 +36,7 @@ const AddReviewModal = ({ courseId, onReviewAdded }: AddReviewModalProps) => {
     try {
       const token = localStorage.getItem('authToken');
       
-      const response = await fetch(`https://apicoursesearch.azurewebsites.net/api/rating/${courseId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/rating/${courseId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
