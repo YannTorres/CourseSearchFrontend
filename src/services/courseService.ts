@@ -1,6 +1,6 @@
 import { CourseResponse, CourseFilters, Course, CourseReview, SimilarCoursesResponse } from '@/types/course';
 
-const API_BASE_URL = 'https://localhost:7236/api';
+const API_BASE_URL = 'https://apicoursesearch.azurewebsites.net/api';
 
 export const courseService = {
   async getCourses(filters: CourseFilters = {}): Promise<CourseResponse> {

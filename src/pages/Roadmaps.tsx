@@ -98,7 +98,7 @@ const Roadmaps = () => {
       const token = localStorage.getItem('authToken');
       if (!token) return;
 
-      const response = await fetch('https://localhost:7236/api/roadmap', {
+      const response = await fetch('https://apicoursesearch.azurewebsites.net/api/roadmap', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -134,7 +134,7 @@ const Roadmaps = () => {
     try {
       setIsGenerating(true);
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://localhost:7236/api/roadmap/generate-with-ai', {
+      const response = await fetch('https://apicoursesearch.azurewebsites.net/api/roadmap/generate-with-ai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

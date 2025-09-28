@@ -38,7 +38,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://localhost:7236/api/users', {
+      const response = await fetch('https://apicoursesearch.azurewebsites.net/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

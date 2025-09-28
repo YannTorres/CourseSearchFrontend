@@ -25,7 +25,7 @@ const Login = () => {
 
     try {
       // Replace this with your actual API endpoint
-      const response = await fetch('https://localhost:7236/api/login', {
+      const response = await fetch('https://apicoursesearch.azurewebsites.net/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
