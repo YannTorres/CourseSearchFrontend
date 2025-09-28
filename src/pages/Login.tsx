@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +19,19 @@ const Login = () => {
     email: '',
     password: ''
   });
+
+  useEffect(() => {
+    // Lê o 'state' que foi passado pelo ProtectedRoute
+    const state = location.state as { message?: string };
+    if (state?.message) {
+      toast({
+        title: "Acesso Restrito",
+        description: state.message,
+        variant: "destructive",
+      });
+      window.history.replaceState({}, document.title)
+    }
+  }, [location, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,12 +48,12 @@ const Login = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Falha no login');
       }
 
       const data = await response.json();
-      
-      // Assuming your API returns { token: string, user: { id, name, email, avatar? } }
+    
       login(data.token, data.user);
       
       toast({
@@ -47,11 +61,12 @@ const Login = () => {
         description: "Bem vindo de Volta!",
       });
       
-      navigate('/');
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     } catch (error) {
       toast({
         title: "Falha no login",
-        description: "Verifique suas credenciais e tente novamente.",
+        description: error instanceof Error ? error.message : "Verifique suas credenciais e tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -141,20 +156,10 @@ const Login = () => {
                 </div>
               </div>
 
-              {/*<div className="flex items-center justify-between">
-                <div className="text-sm">
-                  <Link
-                    to="/forgot-password"
-                    className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-              </div>*/}
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Entrando...' : 'Sign in'}
+                {isLoading ? 'Entrando...' : 'Entrar'}
               </Button>
             </CardFooter>
           </form>

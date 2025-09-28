@@ -178,9 +178,8 @@ const Roadmaps = () => {
     
     try {
       const token = localStorage.getItem('authToken');
-      if (!token) return;
 
-      const response = await fetch(`https://localhost:7236/api/roadmap/${roadmapId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/roadmap/${roadmapId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

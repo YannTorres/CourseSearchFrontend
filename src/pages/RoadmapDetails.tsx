@@ -43,7 +43,9 @@ const RoadmapDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const formatDuration = (minutes: number): string => {
-    if (minutes < 60) return `${minutes} minutes`;
+    if (minutes == null) return 'Indefinido';
+    
+    if (minutes < 60) return `${minutes} Minutos`;
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     if (hours < 24) {

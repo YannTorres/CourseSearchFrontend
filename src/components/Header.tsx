@@ -1,6 +1,5 @@
 
-import { useState } from 'react';
-import { User, Settings, LogOut, Moon, Sun } from 'lucide-react';
+import { User, LogOut, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,11 +13,12 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
 
   const getActiveTab = () => {
@@ -37,11 +37,6 @@ const Header = () => {
         navigate('/roadmaps');
         break;
     }
-  };
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
   };
 
   return (
@@ -74,8 +69,8 @@ const Header = () => {
           <div className="flex items-center space-x-2">
             <Sun className="h-4 w-4 text-gray-600 dark:text-gray-400" />
             <Switch 
-              checked={isDarkMode} 
-              onCheckedChange={toggleDarkMode}
+              checked={theme === 'dark'} 
+              onCheckedChange={toggleTheme}
               aria-label="Toggle dark mode"
             />
             <Moon className="h-4 w-4 text-gray-600 dark:text-gray-400" />
@@ -103,7 +98,7 @@ const Header = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
+                  <span>Sair</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

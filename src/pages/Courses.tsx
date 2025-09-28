@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, BookOpen, Star, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -8,89 +8,84 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Header from '@/components/Header';
 import { courseService } from '@/services/courseService';
-import { Course, CourseResponse } from '@/types/course';
+import { CourseResponse } from '@/types/course';
 import { useToast } from '@/hooks/use-toast';
 
 const Courses = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'rating');
-  const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'desc');
-  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const { toast, dismiss } = useToast();
+
+  const query = searchParams.get('q') || '';
+  const sortBy = searchParams.get('sortBy') || 'rating';
+  const sortOrder = searchParams.get('sortOrder') || 'desc';
+  const currentPage = parseInt(searchParams.get('page') || '1');
+
+  const [searchTerm, setSearchTerm] = useState(query);
+
   const [courseData, setCourseData] = useState<CourseResponse | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const resultsPerPage = 12;
 
-  const fetchCourses = async () => {
-    setLoading(true);
-    try {
-      const response = await courseService.getCourses({
-        pageNumber: currentPage,
-        pageSize: resultsPerPage,
-        search: searchQuery.trim() || undefined,
-        sortby: sortBy,
-        sortOrder: sortOrder
-      });
-      setCourseData(response);
-    } catch (error) {
-      toast({
-        title: "Erro",
-        description: "Erro ao carregar cursos. Tente novamente.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    const query = searchParams.get('q') || '';
-    const sort = searchParams.get('sortBy') || 'rating';
-    const order = searchParams.get('sortOrder') || 'desc';
-    const page = parseInt(searchParams.get('page') || '1');
-    
-    setSearchQuery(query);
-    setSortBy(sort);
-    setSortOrder(order);
-    setCurrentPage(page);
-  }, [searchParams]);
+    const fetchCourses = async () => {
+      setLoading(true);
+      setCourseData(null);
+      dismiss();
+      try {
+        const response = await courseService.getCourses({
+          pageNumber: currentPage,
+          pageSize: resultsPerPage,
+          search: query || undefined,
+          sortby: sortBy,
+          sortOrder: sortOrder
+        });
+        setCourseData(response);
+      } catch (error) {
+        toast({
+          title: "Erro",
+          description: "Erro ao carregar cursos. Tente novamente.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  useEffect(() => {
     fetchCourses();
-  }, [currentPage, searchQuery, sortBy, sortOrder]);
+  }, [searchParams, toast]); 
+
+  useEffect(() => {
+    setSearchTerm(query);
+  }, [query]);
+
+  const handleUpdateParams = (newParams: Record<string, string | number>) => {
+    const params = new URLSearchParams(searchParams);
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, String(value));
+      } else {
+        params.delete(key);
+      }
+    });
+    setSearchParams(params);
+  };
 
   const filteredCourses = courseData?.courses ? courseData.courses.filter(course => {
     return true;
   }) : [];
 
-  const updateSearchParams = (updates: Record<string, string | number>) => {
-    const params = new URLSearchParams(searchParams);
-    
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value !== undefined && value !== '' && value !== 1 && value !== 'rating' && value !== 'desc') {
-        params.set(key, String(value));
-      } else if (key === 'q' && value === '') {
-        params.delete(key);
-      } else if (key !== 'q') {
-        // Keep default values in URL for consistency
-        params.set(key, String(value));
-      }
-    });
-    
-    setSearchParams(params);
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    handleUpdateParams({ q: searchTerm.trim(), page: 1 });
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateSearchParams({ 
-      q: searchQuery.trim(), 
-      page: 1, 
-      sortBy, 
-      sortOrder 
-    });
+  const handlePageChange = (newPage: number) => {
+    handleUpdateParams({ page: newPage });
+  };
+  
+  const handleSortChange = (key: 'sortBy' | 'sortOrder', value: string) => {
+    handleUpdateParams({ [key]: value, page: 1 });
   };
 
   const getLevelColor = (level: string) => {
@@ -117,17 +112,13 @@ const Courses = () => {
           
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="mb-6">
-            <div className={`relative max-w-2xl rounded-lg transition-all duration-300 ${
-              isSearchFocused ? 'border-blue-500 shadow-lg' : 'border-gray-200 dark:border-gray-600 shadow-md'
-            } bg-white dark:bg-gray-800`}>
+          <div className={`relative max-w-2xl rounded-lg transition-all duration-300 border bg-white dark:bg-gray-800 shadow-md`}>
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
               <Input
                 type="text"
-                placeholder="Busque por cursos, tópicos ou instrutores..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setIsSearchFocused(false)}
+                placeholder="Busque por cursos ou tópicos..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12 pr-16 py-5 text-lg border-0 rounded-lg focus:ring-0 focus:outline-none bg-transparent dark:text-white dark:placeholder-gray-400"
               />
               <Button 
@@ -146,10 +137,7 @@ const Courses = () => {
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filtros:</span>
             </div>        
 
-            <Select value={sortBy} onValueChange={(value) => {
-              setSortBy(value);
-              updateSearchParams({ q: searchQuery.trim(), sortBy: value, sortOrder, page: 1 });
-            }}>
+            <Select value={sortBy} onValueChange={(value) => handleSortChange('sortBy', value)}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
@@ -160,10 +148,7 @@ const Courses = () => {
               </SelectContent>
             </Select>
 
-            <Select value={sortOrder} onValueChange={(value) => {
-              setSortOrder(value);
-              updateSearchParams({ q: searchQuery.trim(), sortBy, sortOrder: value, page: 1 });
-            }}>
+            <Select value={sortOrder} onValueChange={(value) => handleSortChange('sortOrder', value)}>
               <SelectTrigger className="w-32">
                 <SelectValue placeholder="Ordem" />
               </SelectTrigger>
@@ -181,7 +166,7 @@ const Courses = () => {
             {loading ? 'Carregando...' : (
               <>
                 Encontrado<span className="font-semibold"> {courseData?.totalCount || 0} </span>curso{(courseData?.totalCount || 0) !== 1 ? 's' : ''}
-                {searchQuery && <span> para "{searchQuery}"</span>}
+                {query && <span> para "{query}"</span>}
               </>
             )}
           </p>
@@ -261,33 +246,15 @@ const Courses = () => {
             {/* Paginação */}
             {courseData && courseData.totalPages > 1 && (
               <div className="flex justify-center mt-8 gap-2">
-                <button
-                  className="px-3 py-1 rounded-md border text-sm font-medium disabled:opacity-50"
-                  onClick={() => {
-                    const newPage = Math.max(1, currentPage - 1);
-                    setCurrentPage(newPage);
-                    updateSearchParams({ q: searchQuery.trim(), sortBy, sortOrder, page: newPage });
-                  }}
-                  disabled={!courseData.hasPreviousPage}
-                >
+                <Button variant="outline" onClick={() => handlePageChange(currentPage - 1)} disabled={!courseData.hasPreviousPage}>
                   Anterior
-                </button>
-                {courseData && (
-                  <span className="font-medium text-sm items-center mt-1">
-                    Página {courseData.pageNumber} de {courseData.totalPages}
-                  </span>
-                )}
-                <button
-                  className="px-3 py-1 rounded-md border text-sm font-medium disabled:opacity-50"
-                  onClick={() => {
-                    const newPage = Math.min(courseData.totalPages, currentPage + 1);
-                    setCurrentPage(newPage);
-                    updateSearchParams({ q: searchQuery.trim(), sortBy, sortOrder, page: newPage });
-                  }}
-                  disabled={!courseData.hasNextPage}
-                >
+                </Button>
+                <span className="font-medium text-sm flex items-center px-4">
+                  Página {courseData.pageNumber} de {courseData.totalPages}
+                </span>
+                <Button variant="outline" onClick={() => handlePageChange(currentPage + 1)} disabled={!courseData.hasNextPage}>
                   Próxima
-                </button>
+                </Button>
               </div>
             )}
           </>

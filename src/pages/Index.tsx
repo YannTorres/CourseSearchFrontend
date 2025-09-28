@@ -41,7 +41,7 @@ const Index = () => {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
               <Input
                 type="text"
-                placeholder="Busque por cursos, tópicos ou instrutores..."
+                placeholder="Busque por cursos ou tópicos..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}
