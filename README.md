@@ -21,6 +21,7 @@ Este projeto foi construído com um conjunto de tecnologias modernas para o dese
 * **Build Tool:** [Vite](https://vitejs.dev/)
 * **Linguagem:** [TypeScript](https.typescriptlang.org/)
 * **Gerenciador de Pacotes:** [NPM](https://www.npmjs.com/)
+* **Ferramenta de Desenvolvimento:** [Lovable](https://lovable.dev/)
 
 ## 🚀 Como Executar o Projeto Localmente
 
@@ -34,7 +35,7 @@ Para rodar este projeto no seu ambiente de desenvolvimento, siga os passos abaix
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/YannTorres/CourseSearchFrontend.git](https://github.com/YannTorres/CourseSearchFrontend.git)
+    git clone https://github.com/YannTorres/CourseSearchFrontend.git
     ```
 
 2.  **Acesse o diretório do projeto:**
@@ -49,7 +50,7 @@ Para rodar este projeto no seu ambiente de desenvolvimento, siga os passos abaix
 
 ### Configuração do Ambiente
 
-A aplicação precisa se conectar a uma API backend para buscar os dados dos cursos.
+A aplicação precisa se conectar a uma API backend para buscar os dados dos cursos. O backend da aplicação está disponível em: [GitHub - Backend](https://github.com/YannTorres/CourseSearchAPI)
 
 1.  Crie um arquivo chamado `.env` na raiz do projeto.
 2.  Adicione a seguinte variável de ambiente, substituindo a URL pelo endereço do seu backend:
