@@ -44,6 +44,10 @@ export const courseService = {
   async getCourseReviews(courseId: string): Promise<CourseReview[]> {
     const response = await fetch(`${API_BASE_URL}/rating/${courseId}`);
     
+    if (response.status === 204) {
+      return [];
+    }
+
     if (!response.ok) {
       throw new Error('Failed to fetch course reviews');
     }

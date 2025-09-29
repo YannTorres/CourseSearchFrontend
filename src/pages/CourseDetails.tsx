@@ -1,16 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Star, Users, Clock, Calendar, Award, ExternalLink, BookOpen, Play, Download, MessageCircle, ThumbsUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Star, Clock, Award, ExternalLink, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Header from '@/components/Header';
 import AddReviewModal from '@/components/AddReviewModal';
 import { courseService } from '@/services/courseService';
-import { Course, CourseReview, SimilarCourse } from '@/types/course';
+import { Course } from '@/types/course';
 import { useState } from 'react';
 
 const CourseDetails = () => {
