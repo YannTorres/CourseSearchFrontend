@@ -13,7 +13,7 @@ import RoadmapDetails from "./pages/RoadmapDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/protectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
