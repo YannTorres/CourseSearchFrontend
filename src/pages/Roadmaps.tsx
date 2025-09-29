@@ -358,8 +358,8 @@ const Roadmaps = () => {
                        <div className="flex items-center">
                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
                          <p className="text-blue-700 dark:text-blue-300 text-sm">
-                           Estamos gerando seu roadmap personalizado com IA... Isso pode levar alguns momentos.
-                           Pode fechar esta aba e continuar navegando.
+                           Estamos gerando sua recomendação personalizada com IA... Isso pode levar alguns momentos,
+                           não feche esta janela.
                          </p>
                        </div>
                      </div>
@@ -381,7 +381,7 @@ const Roadmaps = () => {
                            Gerando...
                          </>
                        ) : (
-                         'Gerar o Roadmap'
+                         'Gerar a Recomendação'
                        )}
                      </Button>
                    </div>
