@@ -246,13 +246,143 @@ const Courses = () => {
             {/* Paginação */}
             {courseData && courseData.totalPages > 1 && (
               <div className="flex justify-center mt-8 gap-2">
-                <Button variant="outline" onClick={() => handlePageChange(currentPage - 1)} disabled={!courseData.hasPreviousPage}>
+                <Button 
+                  variant="outline" 
+                  onClick={() => handlePageChange(currentPage - 1)} 
+                  disabled={!courseData.hasPreviousPage}
+                  className="px-3 py-1"
+                >
                   Anterior
                 </Button>
-                <span className="font-medium text-sm flex items-center px-4">
-                  Página {courseData.pageNumber} de {courseData.totalPages}
-                </span>
-                <Button variant="outline" onClick={() => handlePageChange(currentPage + 1)} disabled={!courseData.hasNextPage}>
+                
+                {/* Lógica para mostrar páginas */}
+                {(() => {
+                  const totalPages = courseData.totalPages;
+                  const current = currentPage;
+                  const pages = [];
+                  
+                  if (totalPages <= 7) {
+                    // Se tem 7 páginas ou menos, mostra todas
+                    for (let i = 1; i <= totalPages; i++) {
+                      pages.push(
+                        <Button
+                          key={i}
+                          variant={i === current ? "default" : "outline"}
+                          onClick={() => handlePageChange(i)}
+                          className="px-3 py-1 min-w-[40px]"
+                        >
+                          {i}
+                        </Button>
+                      );
+                    }
+                  } else {
+                    // Lógica para mais de 7 páginas
+                    if (current <= 4) {
+                      // Mostra páginas 1, 2, 3, 4, 5, ..., última
+                      for (let i = 1; i <= 5; i++) {
+                        pages.push(
+                          <Button
+                            key={i}
+                            variant={i === current ? "default" : "outline"}
+                            onClick={() => handlePageChange(i)}
+                            className="px-3 py-1 min-w-[40px]"
+                          >
+                            {i}
+                          </Button>
+                        );
+                      }
+                      pages.push(
+                        <span key="ellipsis1" className="px-2 py-1 text-gray-500">...</span>
+                      );
+                      pages.push(
+                        <Button
+                          key={totalPages}
+                          variant="outline"
+                          onClick={() => handlePageChange(totalPages)}
+                          className="px-3 py-1 min-w-[40px]"
+                        >
+                          {totalPages}
+                        </Button>
+                      );
+                    } else if (current >= totalPages - 3) {
+                      // Mostra primeira, ..., últimas 5 páginas
+                      pages.push(
+                        <Button
+                          key={1}
+                          variant="outline"
+                          onClick={() => handlePageChange(1)}
+                          className="px-3 py-1 min-w-[40px]"
+                        >
+                          1
+                        </Button>
+                      );
+                      pages.push(
+                        <span key="ellipsis1" className="px-2 py-1 text-gray-500">...</span>
+                      );
+                      for (let i = totalPages - 4; i <= totalPages; i++) {
+                        pages.push(
+                          <Button
+                            key={i}
+                            variant={i === current ? "default" : "outline"}
+                            onClick={() => handlePageChange(i)}
+                            className="px-3 py-1 min-w-[40px]"
+                          >
+                            {i}
+                          </Button>
+                        );
+                      }
+                    } else {
+                      // Mostra primeira, ..., página atual e vizinhas, ..., última
+                      pages.push(
+                        <Button
+                          key={1}
+                          variant="outline"
+                          onClick={() => handlePageChange(1)}
+                          className="px-3 py-1 min-w-[40px]"
+                        >
+                          1
+                        </Button>
+                      );
+                      pages.push(
+                        <span key="ellipsis1" className="px-2 py-1 text-gray-500">...</span>
+                      );
+                      for (let i = current - 1; i <= current + 1; i++) {
+                        pages.push(
+                          <Button
+                            key={i}
+                            variant={i === current ? "default" : "outline"}
+                            onClick={() => handlePageChange(i)}
+                            className="px-3 py-1 min-w-[40px]"
+                          >
+                            {i}
+                          </Button>
+                        );
+                      }
+                      pages.push(
+                        <span key="ellipsis2" className="px-2 py-1 text-gray-500">...</span>
+                      );
+                      pages.push(
+                        <Button
+                          key={totalPages}
+                          variant="outline"
+                          onClick={() => handlePageChange(totalPages)}
+                          className="px-3 py-1 min-w-[40px]"
+                        >
+                          {totalPages}
+                        </Button>
+                      );
+                    }
+                  }
+                  
+                  return pages;
+                })()}
+                
+                <Button 
+                  variant="outline" 
+                  onClick={() => handlePageChange(currentPage + 1)} 
+                  disabled={!courseData.hasNextPage}
+                  className="px-3 py-1"
+                >
                   Próxima
                 </Button>
               </div>
