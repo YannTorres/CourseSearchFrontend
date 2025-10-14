@@ -316,7 +316,7 @@ const CourseDetails = () => {
               <CardContent className="p-6">
                 <div className="text-center mb-6">
                   <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                    {enrichedCourse.platform?.toLowerCase() === 'alura' ? 'R$ 85,02' : 
+                    {enrichedCourse.platform?.toLowerCase() === 'alura' ? 'R$ 109,00' : 
                      enrichedCourse.platform?.toLowerCase() === 'microsoft learn' ? 'Gratuito' : 
                      (enrichedCourse.price || 'Consulte a plataforma')}
                   </div>
@@ -326,7 +326,7 @@ const CourseDetails = () => {
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     {enrichedCourse.platform?.toLowerCase() === 'alura' ? 'Acesso a um ano em todos os cursos da plataforma' :
                      enrichedCourse.platform?.toLowerCase() === 'microsoft learn' ? 'Acesso gratuito ao conteúdo' :
-                     'Acesso completo ao curso'}
+                     'para informações sobre o preço do curso'}
                   </p>
                 </div>
 
@@ -348,13 +348,14 @@ const CourseDetails = () => {
                       <span className="font-medium dark:text-white">{enrichedCourse.platform}</span>
                     </div>
                   )}
-                  {enrichedCourse.durationInMinutes && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600 dark:text-gray-400">Duração:</span>
-                      <span className="font-medium dark:text-white">
-                        {Math.floor(enrichedCourse.durationInMinutes / 60)}h {enrichedCourse.durationInMinutes % 60}min
-                      </span>
-                    </div>
+                  {enrichedCourse.durationInMinutes > 0 && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">Duração:</span>
+                        <span className="font-medium dark:text-white">
+                          {Math.floor(enrichedCourse.durationInMinutes / 60)}h{' '}
+                          {enrichedCourse.durationInMinutes % 60}min
+                        </span>
+                      </div>
                   )}
                   {enrichedCourse.courseLevels && enrichedCourse.courseLevels.length > 0 && (
                     <div className="flex items-center justify-between">
